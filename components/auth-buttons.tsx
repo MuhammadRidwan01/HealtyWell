@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { User } from "lucide-react"
+import { User, Calendar as CalendarIcon } from "lucide-react"
+import { format, addYears } from "date-fns"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -9,9 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
 
 export function AuthButtons() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dob, setDob] = useState<Date>()
 
   return (
     <>
@@ -123,6 +128,32 @@ export function AuthButtons() {
                       <Label htmlFor="last-name">Last Name</Label>
                       <Input id="last-name" type="text" required />
                     </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="date-of-birth">Date of Birth</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="date-of-birth"
+                          variant="outline"
+                          className={cn("w-full justify-start text-left font-normal", !dob && "text-muted-foreground")}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dob ? format(dob, "PPP") : "Select date of birth"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={dob}
+                          onSelect={setDob}
+                          initialFocus
+                          disabled={(date) => date > new Date()}
+                          fromYear={1920}
+                          toYear={new Date().getFullYear()}
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="email-signup">Email</Label>
