@@ -14,6 +14,82 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 
+async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+
+  const form = new FormData(e.currentTarget)
+  const data = {
+    email: form.get('email'),
+    password: form.get('password'),
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+      const error = await res.json()
+      alert('Login failed: ' + (error.message || res.statusText))
+      return
+    }
+
+    const result = await res.json()
+    alert('Login successful!')
+    console.log(result)
+    document.querySelector('[value="signin"]')?.click()
+  } catch (err) {
+    alert('Login error: ' + err)
+  }
+}
+
+async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+
+  const form = new FormData(e.currentTarget)
+  const data = {
+    firstName: form.get('first-name'),
+    lastName: form.get('last-name'),
+    dateOfBirth: form.get('date-of-birth'), // format: YYYY-MM-DD
+    email: form.get('email-signup'),
+    password: form.get('password-signup'),
+    confirmPassword: form.get('confirm-password'),
+    username: (form.get('email-signup') as string).split('@')[0], // bisa generate dari email
+  }
+
+  if (data.password !== data.confirmPassword) {
+    alert('Passwords do not match')
+    return
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+      const error = await res.json()
+      alert('Registration failed: ' + (error.message || res.statusText))
+      return
+    }
+
+    const result = await res.json()
+    alert('Registration successful!')
+    console.log(result)
+  } catch (err) {
+    alert('Registration error: ' + err)
+  }
+}
+
+
 export function AuthButtons() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dob, setDob] = useState<Date>()
@@ -39,16 +115,11 @@ export function AuthButtons() {
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
             <TabsContent value="signin" className="mt-6">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  setIsDialogOpen(false)
-                }}
-              >
+              <form onSubmit={handleLogin}>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="name@example.com" required />
+                    <Input id="email" name="email" type="email" placeholder="name@example.com" required />
                   </div>
                   <div className="grid gap-2">
                     <div className="flex items-center justify-between">
@@ -57,7 +128,7 @@ export function AuthButtons() {
                         Forgot password?
                       </Button>
                     </div>
-                    <Input id="password" type="password" required />
+                    <Input id="password" name="password" type="password" required />
                   </div>
                   <Button type="submit" className="w-full bg-teal-500 text-white hover:bg-teal-600">
                     Sign In
@@ -113,20 +184,17 @@ export function AuthButtons() {
             </TabsContent>
             <TabsContent value="signup" className="mt-6">
               <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  setIsDialogOpen(false)
-                }}
+                onSubmit={handleRegister}
               >
                 <div className="grid gap-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="first-name">First Name</Label>
-                      <Input id="first-name" type="text" required />
+                      <Input id="first-name" name="first-name" type="text" required />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="last-name">Last Name</Label>
-                      <Input id="last-name" type="text" required />
+                      <Input id="last-name" name="last-name" type="text" required />
                     </div>
                   </div>
                   <div className="grid gap-2">
@@ -135,6 +203,7 @@ export function AuthButtons() {
                       <PopoverTrigger asChild>
                         <Button
                           id="date-of-birth"
+                          name="date-of-birth"
                           variant="outline"
                           className={cn("w-full justify-start text-left font-normal", !dob && "text-muted-foreground")}
                         >
@@ -157,15 +226,15 @@ export function AuthButtons() {
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="email-signup">Email</Label>
-                    <Input id="email-signup" type="email" placeholder="name@example.com" required />
+                    <Input id="email-signup" name="email-signup" type="email" placeholder="name@example.com" required />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="password-signup">Password</Label>
-                    <Input id="password-signup" type="password" required />
+                    <Input id="password-signup" name="password-signup" type="password" required />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input id="confirm-password" type="password" required />
+                    <Input id="confirm-password" name="confirm-password" type="password" required />
                   </div>
                   <Button type="submit" className="w-full bg-teal-500 text-white hover:bg-teal-600">
                     Create Account
