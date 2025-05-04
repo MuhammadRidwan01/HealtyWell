@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { User, Calendar as CalendarIcon } from "lucide-react"
-import { format, addYears } from "date-fns"
+import { format } from "date-fns"
+import { useToast } from "@/hooks/use-toast"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -14,85 +15,149 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 
-async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault()
-
-  const form = new FormData(e.currentTarget)
-  const data = {
-    email: form.get('email'),
-    password: form.get('password'),
-  }
-
-  try {
-    const res = await fetch('http://localhost:5000/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) {
-      const error = await res.json()
-      alert('Login failed: ' + (error.message || res.statusText))
-      return
-    }
-
-    const result = await res.json()
-    alert('Login successful!')
-    console.log(result)
-    document.querySelector('[value="signin"]')?.click()
-  } catch (err) {
-    alert('Login error: ' + err)
-  }
-}
-
-async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault()
-
-  const form = new FormData(e.currentTarget)
-  const data = {
-    firstName: form.get('first-name'),
-    lastName: form.get('last-name'),
-    dateOfBirth: form.get('date-of-birth'), // format: YYYY-MM-DD
-    email: form.get('email-signup'),
-    password: form.get('password-signup'),
-    confirmPassword: form.get('confirm-password'),
-    username: (form.get('email-signup') as string).split('@')[0], // bisa generate dari email
-  }
-
-  if (data.password !== data.confirmPassword) {
-    alert('Passwords do not match')
-    return
-  }
-
-  try {
-    const res = await fetch('http://localhost:5000/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!res.ok) {
-      const error = await res.json()
-      alert('Registration failed: ' + (error.message || res.statusText))
-      return
-    }
-
-    const result = await res.json()
-    alert('Registration successful!')
-    console.log(result)
-  } catch (err) {
-    alert('Registration error: ' + err)
-  }
-}
-
-
 export function AuthButtons() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dob, setDob] = useState<Date>()
+  const { toast } = useToast()
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const form = new FormData(e.currentTarget)
+    const data = {
+      email: form.get('email'),
+      password: form.get('password'),
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        toast({
+          title: "Login Failed",
+          description: error.message || res.statusText,
+          variant: "destructive",
+        })
+        return
+      }
+
+      const result = await res.json()
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+      })
+      console.log(result)
+      
+      // Store user data in localStorage or context
+      localStorage.setItem('user', JSON.stringify(result.user))
+      localStorage.setItem('token', result.token)
+      
+      // Close the dialog after successful login
+      setIsDialogOpen(false)
+    } catch (err) {
+      toast({
+        title: "Login Error",
+        description: String(err),
+        variant: "destructive",
+      })
+    }
+  }
+
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const form = new FormData(e.currentTarget)
+    const data = {
+      firstName: form.get('first-name'),
+      lastName: form.get('last-name'),
+      dateOfBirth: dob ? format(dob, "yyyy-MM-dd") : null, // Format date properly
+      email: form.get('email-signup'),
+      password: form.get('password-signup'),
+      confirmPassword: form.get('confirm-password'),
+      username: (form.get('email-signup') as string).split('@')[0], // bisa generate dari email
+    }
+
+    if (!data.dateOfBirth) {
+      toast({
+        title: "Date of Birth Required",
+        description: "Please select your date of birth",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (data.password !== data.confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const responseData = await res.json()
+
+      if (!res.ok) {
+        // Check for various error conditions
+        if (responseData.message && 
+            (responseData.message.includes('email already exists') || 
+             responseData.message.includes('duplicate key') || 
+             responseData.message.includes('already registered'))) {
+          // Handle existing email case
+          toast({
+            title: "Email Already Registered",
+            description: "This email is already registered. Please sign in instead.",
+            variant: "destructive",
+          })
+          // Auto-switch to sign-in tab and pre-fill the email
+          document.querySelector('[value="signin"]')?.click()
+          const emailInput = document.getElementById('email') as HTMLInputElement;
+          if (emailInput) {
+            emailInput.value = data.email as string;
+          }
+        } else {
+          toast({
+            title: "Registration Failed",
+            description: responseData.message || "An error occurred during registration",
+            variant: "destructive",
+          })
+        }
+        return
+      }
+
+      toast({
+        title: "Registration Successful",
+        description: "Your account has been created! Please sign in.",
+      })
+      console.log(responseData)
+      
+      // Switch to the sign-in tab after successful registration
+      document.querySelector('[value="signin"]')?.click()
+    } catch (err) {
+      console.error("Registration error:", err);
+      toast({
+        title: "Registration Error",
+        description: "There was a problem connecting to the server. Please try again later.",
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
     <>
