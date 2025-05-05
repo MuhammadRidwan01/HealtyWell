@@ -34,7 +34,8 @@ interface RegisterData {
   dateOfBirth?: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+// Ekspor AuthContext agar bisa diimpor di file lain
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserData | null>(null)
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Cek apakah pengguna sudah login saat aplikasi dimuat
+  // Check if user is already logged in when the application loads
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (err) {
         console.error("Error checking authentication:", err)
-        // Hapus data yang rusak
+        // Remove corrupted data
         localStorage.removeItem('token')
         localStorage.removeItem('user')
       } finally {
@@ -66,16 +67,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth()
   }, [])
 
-  // Fungsi untuk membersihkan error
+  // Function to clear error
   const clearError = () => setError(null)
 
-  // Fungsi untuk login dengan penanganan error yang lebih baik
+  // Login function with better error handling
   const login = async (email: string, password: string) => {
     setLoading(true)
     setError(null)
     
     try {
-      // Kirim permintaan login ke API
+      // Send login request to API
       const res = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: {
@@ -87,59 +88,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await res.json()
 
       if (!res.ok) {
-        // Penanganan error spesifik berdasarkan status code
+        // Specific error handling based on status code
         if (res.status === 401) {
           // Unauthorized - Invalid credentials
           if (data.message.includes('Email')) {
-            throw new Error('Email tidak ditemukan. Silakan periksa email Anda atau daftar.');
+            throw new Error('Email not found. Please check your email or register.');
           } else if (data.message.includes('password')) {
-            throw new Error('Password salah. Silakan coba lagi.');
+            throw new Error('Wrong password. Please try again.');
           } else {
-            throw new Error('Kredensial tidak valid. Silakan periksa email dan password Anda.');
+            throw new Error('Invalid credentials. Please check your email and password.');
           }
         } else {
-          // Error lainnya
-          throw new Error(data.message || "Login gagal. Silakan coba lagi nanti.");
+          // Other errors
+          throw new Error(data.message || "Login failed. Please try again later.");
         }
       }
       
-      // Simpan token
+      // Save token
       localStorage.setItem('token', data.access_token)
       setToken(data.access_token)
       
-      // Ambil data pengguna dengan token
-      const userRes = await fetch('http://localhost:5000/auth/user', {
+      // Get user data with token
+      const userRes = await fetch('http://localhost:3000/auth/user', {
         headers: {
           'Authorization': `Bearer ${data.access_token}`
         }
       })
       
       if (!userRes.ok) {
-        throw new Error("Gagal mengambil data pengguna")
+        throw new Error("Failed to fetch user data")
       }
       
       const userData = await userRes.json()
       
-      // Simpan data pengguna
+      // Save user data
       localStorage.setItem('user', JSON.stringify(userData))
       setUser(userData)
       
     } catch (err) {
       console.error("Login error:", err)
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login")
+      setError(err instanceof Error ? err.message : "An error occurred during login")
       throw err
     } finally {
       setLoading(false)
     }
   }
 
-  // Fungsi untuk registrasi dengan penanganan error yang lebih baik
+  // Registration function with better error handling
   const register = async (userData: RegisterData) => {
     setLoading(true)
     setError(null)
     
     try {
-      const res = await fetch('http://localhost:5000/auth/register', {
+      const res = await fetch('http://localhost:3000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,42 +151,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await res.json()
 
       if (!res.ok) {
-        // Penanganan error spesifik berdasarkan status code
+        // Specific error handling based on status code
         if (res.status === 409) {
-          // Conflict - Email atau username sudah ada
+          // Conflict - Email or username already exists
           if (data.message.includes('Email')) {
-            throw new Error('Email sudah digunakan. Silakan gunakan alamat email yang berbeda.');
+            throw new Error('Email is already in use. Please use a different email address.');
           } else if (data.message.includes('Username')) {
-            throw new Error('Username sudah diambil. Silakan pilih username yang berbeda.');
+            throw new Error('Username is already taken. Please choose a different username.');
           } else {
             throw new Error(data.message);
           }
         } else if (res.status === 400) {
           // Bad Request - Validation errors
-          throw new Error('Silakan periksa input Anda: ' + data.message);
+          throw new Error('Please check your input: ' + data.message);
         } else {
-          // Error lainnya
+          // Other errors
           throw new Error(
             Array.isArray(data.message) 
               ? data.message[0] 
-              : data.message || "Registrasi gagal. Silakan coba lagi nanti."
+              : data.message || "Registration failed. Please try again later."
           );
         }
       }
       
-      // Registrasi berhasil, tapi tidak otomatis login
-      // Pengguna perlu login secara manual setelah registrasi
+      // Registration successful, but no automatic login
+      // User needs to login manually after registration
       
     } catch (err) {
       console.error("Registration error:", err)
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat registrasi")
+      setError(err instanceof Error ? err.message : "An error occurred during registration")
       throw err
     } finally {
       setLoading(false)
     }
   }
 
-  // Fungsi untuk logout
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -213,7 +214,7 @@ export function useAuth() {
   const context = useContext(AuthContext)
   
   if (context === undefined) {
-    throw new Error("useAuth harus digunakan di dalam AuthProvider")
+    throw new Error("useAuth must be used within an AuthProvider")
   }
   
   return context

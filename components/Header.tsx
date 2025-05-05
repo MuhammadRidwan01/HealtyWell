@@ -11,9 +11,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/use-auth" // Tambahkan import ini
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
+  const { isAuthenticated } = useAuth() // Gunakan hook useAuth untuk memeriksa status autentikasi
   
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +58,9 @@ export function Header() {
             { href: "/about", label: "About Us" },
             { href: "/services", label: "Services" },
             { href: "/blog", label: "Blog" },
-            { href: "/contact", label: "Contact" }
+            { href: "/contact", label: "Contact" },
+            // Tambahkan link Dashboard hanya jika pengguna sudah login
+            ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
           ].map((item, index) => (
             <Link 
               key={index}
@@ -108,7 +112,9 @@ export function Header() {
                     { href: "/about", label: "About Us" },
                     { href: "/services", label: "Services" },
                     { href: "/blog", label: "Blog" },
-                    { href: "/contact", label: "Contact" }
+                    { href: "/contact", label: "Contact" },
+                    // Tambahkan link Dashboard di menu mobile juga jika pengguna sudah login
+                    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
                   ].map((item, index) => (
                     <Link 
                       key={index}

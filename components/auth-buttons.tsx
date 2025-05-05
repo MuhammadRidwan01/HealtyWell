@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { format } from "date-fns"
-import { CalendarIcon, LogOut, Settings, User, Loader2 } from "lucide-react"
+import { CalendarIcon, LogOut, Settings, User, Loader2, LayoutDashboard } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -382,6 +383,12 @@ export function AuthButtons() {
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard" className="flex items-center cursor-pointer">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  <span>Dashboard</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
@@ -586,7 +593,7 @@ export function AuthButtons() {
                   <Input 
                     id="edit-first-name" 
                     name="edit-first-name" 
-                    defaultValue={userData?.firstName || ""} 
+                    defaultValue={userData?.firstName || ""}
                     required 
                   />
                 </div>
@@ -595,7 +602,7 @@ export function AuthButtons() {
                   <Input 
                     id="edit-last-name" 
                     name="edit-last-name" 
-                    defaultValue={userData?.lastName || ""} 
+                    defaultValue={userData?.lastName || ""}
                   />
                 </div>
               </div>
@@ -630,7 +637,7 @@ export function AuthButtons() {
                 <Input 
                   id="edit-phone" 
                   name="edit-phone" 
-                  defaultValue={userData?.phoneNumber || ""} 
+                  defaultValue={userData?.phoneNumber || ""}
                 />
               </div>
               <div className="space-y-2">
@@ -638,19 +645,20 @@ export function AuthButtons() {
                 <Input 
                   id="edit-address" 
                   name="edit-address" 
-                  defaultValue={userData?.address || ""} 
+                  defaultValue={userData?.address || ""}
                 />
               </div>
               <div className="flex justify-between pt-4">
                 <Button 
-                  type="button" 
+                  type="button"
                   variant="outline" 
                   onClick={() => setIsEditMode(false)}
                 >
                   Cancel
                 </Button>
                 <Button 
-                  type="submit" 
+                  type="submit"
+                  className="bg-teal-600 hover:bg-teal-700"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -665,25 +673,37 @@ export function AuthButtons() {
               </div>
             </form>
           ) : (
-            // Profile View
-            <div className="space-y-6 pt-4">
-              <div className="space-y-1">
-                <h3 className="text-sm font-medium leading-none">Email</h3>
-                <p className="text-sm text-muted-foreground">{userData?.email}</p>
+            // Profile Info Display
+            <div className="space-y-4 pt-4">
+              <div className="grid grid-cols-[120px_1fr] items-center">
+                <span className="text-sm font-medium">Email:</span>
+                <span className="text-sm">{userData?.email}</span>
               </div>
-              <div className="space-y-1">
-                <h3 className="text-sm font-medium leading-none">Date of Birth</h3>
-                <p className="text-sm text-muted-foreground">{userDisplayData.dateOfBirth}</p>
+              <Separator />
+              <div className="grid grid-cols-[120px_1fr] items-center">
+                <span className="text-sm font-medium">Date of Birth:</span>
+                <span className="text-sm">{userDisplayData.dateOfBirth}</span>
               </div>
-              <div className="space-y-1">
-                <h3 className="text-sm font-medium leading-none">Phone Number</h3>
-                <p className="text-sm text-muted-foreground">{userDisplayData.phoneNumber}</p>
+              <Separator />
+              <div className="grid grid-cols-[120px_1fr] items-center">
+                <span className="text-sm font-medium">Phone:</span>
+                <span className="text-sm">{userDisplayData.phoneNumber}</span>
               </div>
-              <div className="space-y-1">
-                <h3 className="text-sm font-medium leading-none">Address</h3>
+              <Separator />
+              <div className="grid grid-cols-[120px_1fr] items-start">
+                <span className="text-sm font-medium">Address:</span>
                 <p className="text-sm text-muted-foreground">{userDisplayData.address}</p>
               </div>
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-between pt-4">
+                <Button 
+                  variant="outline"
+                  asChild
+                >
+                  <Link href="/dashboard" className="flex items-center">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <span>Go to Dashboard</span>
+                  </Link>
+                </Button>
                 <Button 
                   onClick={() => setIsEditMode(true)}
                   className="bg-teal-600 hover:bg-teal-700"
