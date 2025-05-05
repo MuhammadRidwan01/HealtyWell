@@ -424,6 +424,9 @@ export function AuthButtons() {
             
             <TabsContent value="signin" className="space-y-4">
               <form onSubmit={handleLogin} className="space-y-4">
+              {loginError && (
+                  <div className="text-sm text-red-500">{loginError}</div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
@@ -437,9 +440,7 @@ export function AuthButtons() {
                   </div>
                   <Input id="password" name="password" type="password" required />
                 </div>
-                {loginError && (
-                  <div className="text-sm text-red-500">{loginError}</div>
-                )}
+                
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
