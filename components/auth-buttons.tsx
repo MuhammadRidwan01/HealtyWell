@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { format } from "date-fns"
 import { CalendarIcon, LogOut, Settings, User, Loader2 } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
+
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -169,24 +170,14 @@ export function AuthButtons() {
       dateOfBirth: dob ? format(dob, "yyyy-MM-dd") : null,
       email: form.get('email-signup'),
       password: form.get('password-signup'),
-      username: form.get('username') || form.get('email-signup')?.toString().split('@')[0], // Use provided username or generate from email
+      username: form.get('username') || form.get('email-signup')?.toString().split('@')[0], // Use email username as fallback
     }
 
-    if (!data.dateOfBirth) {
-      setRegisterError("Please select your date of birth")
-      toast({
-        title: "Date of Birth Required",
-        description: "Please select your date of birth",
-        variant: "destructive",
-      })
-      setIsLoading(false)
-      return
-    }
-
+    // Check if passwords match
     if (data.password !== form.get('confirm-password')) {
       setRegisterError("Passwords do not match")
       toast({
-        title: "Password Mismatch",
+        title: "Registration Failed",
         description: "Passwords do not match",
         variant: "destructive",
       })
@@ -488,28 +479,30 @@ export function AuthButtons() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="last-name">Last name</Label>
-                    <Input id="last-name" name="last-name" required />
+                    <Input id="last-name" name="last-name" />
                   </div>
                 </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="username">Username (optional)</Label>
-                  <Input id="username" name="username" placeholder="johndoe" />
+                  <Input id="username" name="username" />
                 </div>
-                
                 <div className="space-y-2">
-                  <Label htmlFor="dob">Date of birth</Label>
+                  <Label htmlFor="email-signup">Email</Label>
+                  <Input id="email-signup" name="email-signup" type="email" required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Date of Birth (optional)</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant="outline"
+                        variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !dob && "text-muted-foreground"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dob ? format(dob, "PPP") : <span>Pick a date</span>}
+                        {dob ? format(dob, "PPP") : "Pick a date"}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
@@ -523,26 +516,17 @@ export function AuthButtons() {
                     </PopoverContent>
                   </Popover>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email-signup">Email</Label>
-                  <Input id="email-signup" name="email-signup" type="email" placeholder="your.email@example.com" required />
-                </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="password-signup">Password</Label>
                   <Input id="password-signup" name="password-signup" type="password" required />
                 </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="confirm-password">Confirm Password</Label>
                   <Input id="confirm-password" name="confirm-password" type="password" required />
                 </div>
-                
                 {registerError && (
                   <div className="text-sm text-red-500">{registerError}</div>
                 )}
-                
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
@@ -578,165 +562,137 @@ export function AuthButtons() {
 
       {/* Profile Dialog */}
       <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <div className="space-y-4">
-            <div className="flex flex-col items-center justify-center gap-2 text-center">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={userData?.username || "User"} />
-                <AvatarFallback className="text-2xl">{getUserInitials()}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="text-xl font-semibold">{userDisplayData.fullName}</h3>
-                <p className="text-sm text-muted-foreground">@{userDisplayData.username}</p>
+        <DialogContent className="sm:max-w-[425px]">
+          <div className="flex flex-col items-center justify-center space-y-3 border-b pb-6">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src="/placeholder-avatar.jpg" alt={userData?.username || "User"} />
+              <AvatarFallback className="text-lg">{getUserInitials()}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1 text-center">
+              <h2 className="text-xl font-semibold">{userDisplayData.fullName}</h2>
+              <p className="text-sm text-muted-foreground">@{userDisplayData.username}</p>
+            </div>
+            <div className="flex items-center text-xs text-muted-foreground">
+              <span>Member since {userDisplayData.memberSince}</span>
+            </div>
+          </div>
+
+          {isEditMode ? (
+            // Edit Profile Form
+            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-first-name">First name</Label>
+                  <Input 
+                    id="edit-first-name" 
+                    name="edit-first-name" 
+                    defaultValue={userData?.firstName || ""} 
+                    required 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-last-name">Last name</Label>
+                  <Input 
+                    id="edit-last-name" 
+                    name="edit-last-name" 
+                    defaultValue={userData?.lastName || ""} 
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Date of Birth</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !dob && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {dob ? format(dob, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={dob}
+                      onSelect={setDob}
+                      initialFocus
+                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-phone">Phone Number</Label>
+                <Input 
+                  id="edit-phone" 
+                  name="edit-phone" 
+                  defaultValue={userData?.phoneNumber || ""} 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-address">Address</Label>
+                <Input 
+                  id="edit-address" 
+                  name="edit-address" 
+                  defaultValue={userData?.address || ""} 
+                />
+              </div>
+              <div className="flex justify-between pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsEditMode(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>Saving...</span>
+                    </div>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            // Profile View
+            <div className="space-y-6 pt-4">
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium leading-none">Email</h3>
+                <p className="text-sm text-muted-foreground">{userData?.email}</p>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium leading-none">Date of Birth</h3>
+                <p className="text-sm text-muted-foreground">{userDisplayData.dateOfBirth}</p>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium leading-none">Phone Number</h3>
+                <p className="text-sm text-muted-foreground">{userDisplayData.phoneNumber}</p>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium leading-none">Address</h3>
+                <p className="text-sm text-muted-foreground">{userDisplayData.address}</p>
+              </div>
+              <div className="flex justify-end pt-4">
+                <Button 
+                  onClick={() => setIsEditMode(true)}
+                  className="bg-teal-600 hover:bg-teal-700"
+                >
+                  Edit Profile
+                </Button>
               </div>
             </div>
-            
-            <Separator />
-            
-            {isEditMode ? (
-              <form onSubmit={handleUpdateProfile} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-first-name">First name</Label>
-                    <Input 
-                      id="edit-first-name" 
-                      name="edit-first-name" 
-                      defaultValue={userData?.firstName || ""} 
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-last-name">Last name</Label>
-                    <Input 
-                      id="edit-last-name" 
-                      name="edit-last-name" 
-                      defaultValue={userData?.lastName || ""} 
-                      required 
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="edit-dob">Date of birth</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !dob && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dob ? format(dob, "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={dob}
-                        onSelect={setDob}
-                        initialFocus
-                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="edit-phone">Phone number</Label>
-                  <Input 
-                    id="edit-phone" 
-                    name="edit-phone" 
-                    defaultValue={userData?.phoneNumber || ""} 
-                    placeholder="e.g. +1 (555) 123-4567"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="edit-address">Address</Label>
-                  <Input 
-                    id="edit-address" 
-                    name="edit-address" 
-                    defaultValue={userData?.address || ""} 
-                    placeholder="Your address"
-                  />
-                </div>
-                
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsEditMode(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button 
-                    type="submit"
-                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        <span>Saving...</span>
-                      </div>
-                    ) : (
-                      "Save Changes"
-                    )}
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">Email</h4>
-                      <p className="text-sm">{userData?.email}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">Date of Birth</h4>
-                      <p className="text-sm">{userDisplayData.dateOfBirth}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">Phone</h4>
-                      <p className="text-sm">{userDisplayData.phoneNumber}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">Member Since</h4>
-                      <p className="text-sm">{userDisplayData.memberSince}</p>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">Address</h4>
-                    <p className="text-sm">{userDisplayData.address}</p>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleLogout}
-                    className="text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200 hover:border-red-300"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                  </Button>
-                  <Button 
-                    onClick={() => setIsEditMode(true)}
-                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
-                  >
-                    Edit Profile
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

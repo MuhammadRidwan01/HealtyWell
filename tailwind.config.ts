@@ -11,6 +11,15 @@ const config = {
     "*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/components/(toast|spinner).js"
   ],
+  safelist: [
+    'delay-[200ms]',
+    'delay-[300ms]',
+    'delay-[400ms]',
+    'delay-[500ms]',
+    'delay-[600ms]',
+    'delay-[700ms]',
+    'delay-[800ms]',
+  ],
   prefix: "",
   theme: {
     container: {
@@ -63,12 +72,12 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" },
         },
       },
       animation: {

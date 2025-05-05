@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "HealthyWell - Your Health & Wellness Platform",
   description: "A comprehensive health and wellness platform for managing your wellbeing",
   keywords: "health, wellness, fitness, nutrition, mental health, telemedicine",
-  generator: 'v0.dev'
+  generator: 'healthywell.dev'
 }
 
 export default function RootLayout({
