@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { NewsSection } from "@/components/NewsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { LiveChat } from "@/components/live-chat";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <DashboardPreviewSection />
         <NewsSection />
         <CTASection />
+        <LiveChat />
       </main>
       <Footer />
     </div>
