@@ -213,11 +213,11 @@ export default function DashboardPage() {
                             <CardDescription>Status kesehatan Anda saat ini</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="col-span-2">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                                <div className="col-span-1 lg:col-span-2">
                                     <div className="mb-4">
                                         <h3 className="text-sm font-medium mb-2">Skor Kesehatan Keseluruhan</h3>
-                                        <div className="h-[180px]">
+                                        <div className="h-[180px] w-full">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <PieChart>
                                                     <Pie
@@ -251,7 +251,7 @@ export default function DashboardPage() {
                                             </div>
                                             <span className="text-sm font-semibold text-teal-600">78%</span>
                                         </div>
-                                        <Progress value={78} className="h-2 w-full bg-slate-200" indicatorClassName="bg-gradient-to-r from-teal-400 to-teal-600" />
+                                        <Progress value={78} className="h-2 w-full bg-slate-200" />
                                         <p className="text-xs text-muted-foreground">Anda telah mencapai 78% dari target aktivitas mingguan</p>
                                     </div>
 
@@ -263,7 +263,7 @@ export default function DashboardPage() {
                                             </div>
                                             <span className="text-sm font-semibold text-teal-600">65%</span>
                                         </div>
-                                        <Progress value={65} className="h-2 w-full bg-slate-200" indicatorClassName="bg-gradient-to-r from-teal-400 to-teal-600" />
+                                        <Progress value={65} className="h-2 w-full bg-slate-200" />
                                         <p className="text-xs text-muted-foreground">Anda telah mencapai 65% dari target nutrisi harian</p>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@ export default function DashboardPage() {
                                             </div>
                                             <span className="text-sm font-semibold text-teal-600">92%</span>
                                         </div>
-                                        <Progress value={92} className="h-2 w-full bg-slate-200" indicatorClassName="bg-gradient-to-r from-teal-400 to-teal-600" />
+                                        <Progress value={92} className="h-2 w-full bg-slate-200" />
                                         <p className="text-xs text-muted-foreground">Detak jantung dan tekanan darah Anda dalam kondisi baik</p>
                                     </div>
 
@@ -289,7 +289,7 @@ export default function DashboardPage() {
                                             </div>
                                             <span className="text-sm font-semibold text-teal-600">85%</span>
                                         </div>
-                                        <Progress value={85} className="h-2 w-full bg-slate-200" indicatorClassName="bg-gradient-to-r from-teal-400 to-teal-600" />
+                                        <Progress value={85} className="h-2 w-full bg-slate-200" />
                                         <p className="text-xs text-muted-foreground">Tingkat stres dan kualitas tidur Anda dalam kondisi baik</p>
                                     </div>
                                 </div>
@@ -308,7 +308,7 @@ export default function DashboardPage() {
                     </TabsList>
 
                     <TabsContent value="overview" className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             <Card className="border-none shadow-md hover:shadow-lg transition-all duration-200 dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                     <CardTitle className="text-sm font-medium">Langkah Harian</CardTitle>
@@ -398,8 +398,8 @@ export default function DashboardPage() {
                             </Card>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            <Card className="col-span-2 border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
+                        <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+                            <Card className="lg:col-span-2 border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle>Aktivitas Mingguan</CardTitle>
                                     <CardDescription>Ringkasan aktivitas fisik Anda selama seminggu terakhir</CardDescription>
@@ -530,16 +530,15 @@ export default function DashboardPage() {
                             </Card>
                         </div>
                     </TabsContent>
-
                     <TabsContent value="activity" className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
+                        <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1">
+                            <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm w-full">
                                 <CardHeader>
                                     <CardTitle>Aktivitas Harian</CardTitle>
                                     <CardDescription>Perbandingan langkah dan kalori terbakar</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-[300px]">
+                                    <div className="h-[300px] w-full">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart
                                                 data={activityData}
@@ -565,13 +564,13 @@ export default function DashboardPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
+                            <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm w-full">
                                 <CardHeader>
                                     <CardTitle>Target Aktivitas</CardTitle>
                                     <CardDescription>Progres terhadap target mingguan Anda</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-[300px]">
+                                    <div className="h-[300px] w-full">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart
                                                 data={activityData}
@@ -613,13 +612,13 @@ export default function DashboardPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="col-span-2 border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
+                            <Card className="col-span-full border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle>Rekomendasi Aktivitas</CardTitle>
                                     <CardDescription>Aktivitas yang disarankan berdasarkan profil Anda</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="grid gap-4 md:grid-cols-3">
+                                    <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                                         <div className="rounded-lg overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 shadow-sm">
                                             <div className="rounded-full bg-blue-100 p-2 w-10 h-10 flex items-center justify-center mb-3 dark:bg-blue-800/30">
                                                 <svg
@@ -701,16 +700,15 @@ export default function DashboardPage() {
                             </Card>
                         </div>
                     </TabsContent>
-
                     <TabsContent value="nutrition" className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
                             <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle>Asupan Nutrisi</CardTitle>
                                     <CardDescription>Distribusi makronutrien mingguan Anda</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-[300px]">
+                                    <div className="h-[300px] w-full">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart
                                                 data={nutritionData}
@@ -744,7 +742,7 @@ export default function DashboardPage() {
                                     <CardDescription>Durasi dan kualitas tidur mingguan</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-[300px]">
+                                    <div className="h-[300px] w-full">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart
                                                 data={sleepData}
@@ -789,13 +787,13 @@ export default function DashboardPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="col-span-2 border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
+                            <Card className="col-span-1 md:col-span-2 border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle>Rekomendasi Nutrisi</CardTitle>
                                     <CardDescription>Makanan yang disarankan berdasarkan profil Anda</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="grid gap-4 md:grid-cols-3">
+                                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                                         <div className="rounded-lg overflow-hidden bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 shadow-sm">
                                             <div className="rounded-full bg-green-100 p-2 w-10 h-10 flex items-center justify-center mb-3 dark:bg-green-800/30">
                                                 <svg
@@ -867,7 +865,6 @@ export default function DashboardPage() {
                             </Card>
                         </div>
                     </TabsContent>
-
                     <TabsContent value="appointments" className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2">
                             <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
@@ -1037,9 +1034,9 @@ export default function DashboardPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="relative">
-                                        <div className="absolute h-full w-px bg-gray-200 dark:bg-gray-700 left-4 top-0"></div>
+                                        <div className="absolute h-full w-px bg-gray-200 dark:bg-gray-700 left-4 sm:left-4 top-0"></div>
                                         <ol className="space-y-6 relative">
-                                            <li className="pl-10">
+                                            <li className="pl-8 sm:pl-10">
                                                 <div className="absolute left-0 flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/20 text-teal-600 -translate-x-1/2">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -1054,18 +1051,23 @@ export default function DashboardPage() {
                                                         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                                                     </svg>
                                                 </div>
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                                                     <div>
-                                                        <h3 className="font-semibold">Pemeriksaan Kesehatan Tahunan</h3>
-                                                        <p className="text-sm text-muted-foreground">RS Medika Jaya</p>
+                                                        <h3 className="font-semibold text-sm sm:text-base">Pemeriksaan Kesehatan Tahunan</h3>
+                                                        <p className="text-xs sm:text-sm text-muted-foreground">RS Medika Jaya</p>
                                                     </div>
-                                                    <time className="text-xs text-muted-foreground mt-1 sm:mt-0">10 Januari 2024</time>
+                                                    <time className="text-xs text-muted-foreground">10 Januari 2024</time>
                                                 </div>
-                                                <p className="mt-2 text-sm">Hasil pemeriksaan menunjukkan kondisi kesehatan yang baik. Tekanan darah, gula darah, dan kolesterol dalam batas normal.</p>
-                                                <Button variant="link" className="px-0 text-teal-600 mt-1">Lihat Detail</Button>
+                                                <p className="mt-2 text-xs sm:text-sm">
+                                                    Hasil pemeriksaan menunjukkan kondisi kesehatan yang baik. Tekanan darah, gula darah, dan kolesterol
+                                                    dalam batas normal.
+                                                </p>
+                                                <Button variant="link" className="px-0 h-auto text-xs sm:text-sm text-teal-600 mt-1">
+                                                    Lihat Detail
+                                                </Button>
                                             </li>
 
-                                            <li className="pl-10">
+                                            <li className="pl-8 sm:pl-10">
                                                 <div className="absolute left-0 flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 -translate-x-1/2">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -1082,18 +1084,23 @@ export default function DashboardPage() {
                                                         <path d="M13 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                                                     </svg>
                                                 </div>
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                                                     <div>
-                                                        <h3 className="font-semibold">Konsultasi Gizi</h3>
-                                                        <p className="text-sm text-muted-foreground">Klinik Nutrisi Sehat</p>
+                                                        <h3 className="font-semibold text-sm sm:text-base">Konsultasi Gizi</h3>
+                                                        <p className="text-xs sm:text-sm text-muted-foreground">Klinik Nutrisi Sehat</p>
                                                     </div>
-                                                    <time className="text-xs text-muted-foreground mt-1 sm:mt-0">5 Maret 2024</time>
+                                                    <time className="text-xs text-muted-foreground">5 Maret 2024</time>
                                                 </div>
-                                                <p className="mt-2 text-sm">Evaluasi pola makan dan rekomendasi untuk meningkatkan asupan protein dan serat. Disarankan untuk mengurangi konsumsi gula.</p>
-                                                <Button variant="link" className="px-0 text-teal-600 mt-1">Lihat Detail</Button>
+                                                <p className="mt-2 text-xs sm:text-sm">
+                                                    Evaluasi pola makan dan rekomendasi untuk meningkatkan asupan protein dan serat. Disarankan untuk
+                                                    mengurangi konsumsi gula.
+                                                </p>
+                                                <Button variant="link" className="px-0 h-auto text-xs sm:text-sm text-teal-600 mt-1">
+                                                    Lihat Detail
+                                                </Button>
                                             </li>
 
-                                            <li className="pl-10">
+                                            <li className="pl-8 sm:pl-10">
                                                 <div className="absolute left-0 flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/20 text-purple-600 -translate-x-1/2">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -1108,15 +1115,20 @@ export default function DashboardPage() {
                                                         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                                                     </svg>
                                                 </div>
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                                                     <div>
-                                                        <h3 className="font-semibold">Pemeriksaan Jantung</h3>
-                                                        <p className="text-sm text-muted-foreground">RS Kardiologi Indonesia</p>
+                                                        <h3 className="font-semibold text-sm sm:text-base">Pemeriksaan Jantung</h3>
+                                                        <p className="text-xs sm:text-sm text-muted-foreground">RS Kardiologi Indonesia</p>
                                                     </div>
-                                                    <time className="text-xs text-muted-foreground mt-1 sm:mt-0">20 Mei 2024</time>
+                                                    <time className="text-xs text-muted-foreground">20 Mei 2024</time>
                                                 </div>
-                                                <p className="mt-2 text-sm">Hasil EKG normal. Fungsi jantung dalam kondisi baik. Disarankan untuk tetap menjaga pola hidup sehat dan rutin berolahraga.</p>
-                                                <Button variant="link" className="px-0 text-teal-600 mt-1">Lihat Detail</Button>
+                                                <p className="mt-2 text-xs sm:text-sm">
+                                                    Hasil EKG normal. Fungsi jantung dalam kondisi baik. Disarankan untuk tetap menjaga pola hidup sehat dan
+                                                    rutin berolahraga.
+                                                </p>
+                                                <Button variant="link" className="px-0 h-auto text-xs sm:text-sm text-teal-600 mt-1">
+                                                    Lihat Detail
+                                                </Button>
                                             </li>
                                         </ol>
                                     </div>
