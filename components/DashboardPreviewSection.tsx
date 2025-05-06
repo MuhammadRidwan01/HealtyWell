@@ -25,21 +25,21 @@ export function DashboardPreviewSection() {
                   <h3 className="font-medium">Fitness Progress</h3>
                   <span className="text-sm text-teal-600">78%</span>
                 </div>
-                <Progress value={78} className="h-2 w-full bg-slate-200" indicatorClassName="bg-teal-500" />
+                <Progress value={78} className="h-2 w-full bg-slate-200" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium">Nutrition Goals</h3>
                   <span className="text-sm text-teal-600">65%</span>
                 </div>
-                <Progress value={65} className="h-2 w-full bg-slate-200" indicatorClassName="bg-teal-500" />
+                <Progress value={65} className="h-2 w-full bg-slate-200" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium">Sleep Quality</h3>
                   <span className="text-sm text-teal-600">92%</span>
                 </div>
-                <Progress value={92} className="h-2 w-full bg-slate-200" indicatorClassName="bg-teal-500" />
+                <Progress value={92} className="h-2 w-full bg-slate-200" />
               </div>
             </div>
             <div className="pt-4">

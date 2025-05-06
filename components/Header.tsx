@@ -59,6 +59,8 @@ export function Header() {
             { href: "/servics", label: "Services" },
             { href: "/blog", label: "Blog" },
             { href: "/contact", label: "Contact" },
+            { href: "/doctors", label: "Ai Doctor" },
+            { href: "/my-appointments", label: "My Appointments" },
          
           ].map((item, index) => (
             <Link 

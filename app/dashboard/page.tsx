@@ -64,7 +64,7 @@ export default function DashboardPage() {
         // Periksa apakah pengguna sudah login
         const token = localStorage.getItem('token')
         const storedUser = localStorage.getItem('user')
-
+        console.log("User:", storedUser)
         if (!token || !storedUser) {
             // Jika tidak login, arahkan ke halaman utama
             toast({
