@@ -88,27 +88,27 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-medium">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/about" className="text-muted-foreground hover:text-foreground">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/servics" className="text-muted-foreground hover:text-foreground">
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/blog" className="text-muted-foreground hover:text-foreground">
                   Health Blog
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/#testimonial" className="text-muted-foreground hover:text-foreground">
                   Testimonials
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
                   Contact Us
                 </Link>
               </li>
@@ -118,27 +118,27 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-medium">Services</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/doctors" className="text-muted-foreground hover:text-foreground">
                   Virtual Consultations
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/servics" className="text-muted-foreground hover:text-foreground">
                   Fitness Programs
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/doctors" className="text-muted-foreground hover:text-foreground">
                   Nutritional Guidance
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/doctors" className="text-muted-foreground hover:text-foreground">
                   Mental Wellness
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href="/doctors" className="text-muted-foreground hover:text-foreground">
                   Preventive Health
                 </Link>
               </li>
@@ -159,7 +159,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2023 VitalityHub. All rights reserved.</p>
+          <p>© 2025 HealtyWell. All rights reserved.</p>
         </div>
       </div>
     </footer>

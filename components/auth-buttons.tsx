@@ -101,7 +101,7 @@ export function AuthButtons() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/auth/login', {
+      const res = await fetch('https://backend.hostspot.online/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export function AuthButtons() {
       localStorage.setItem('token', result.access_token)
       
       // Fetch user data with the token
-      const userRes = await fetch('http://localhost:5000/auth/user', {
+      const userRes = await fetch('https://backend.hostspot.online/auth/user', {
         headers: {
           'Authorization': `Bearer ${result.access_token}`
         }
@@ -197,7 +197,7 @@ export function AuthButtons() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/auth/register', {
+      const res = await fetch('https://backend.hostspot.online/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -322,7 +322,7 @@ export function AuthButtons() {
         throw new Error("Not authenticated")
       }
 
-      const res = await fetch('http://localhost:5000/auth/update-profile', {
+      const res = await fetch('https://backend.hostspot.online/auth/update-profile', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

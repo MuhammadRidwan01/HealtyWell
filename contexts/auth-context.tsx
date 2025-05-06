@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     try {
       // Send login request to API
-      const res = await fetch('http://localhost:5000/auth/login', {
+      const res = await fetch('https://backend.hostspot.online/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

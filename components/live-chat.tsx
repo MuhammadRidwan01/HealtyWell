@@ -226,7 +226,7 @@ export function LiveChat() {
 
       // Make API call to backend
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/health-support/chat`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://backend.hostspot.online'}/health-support/chat`,
         {
           method: 'POST',
           headers: {

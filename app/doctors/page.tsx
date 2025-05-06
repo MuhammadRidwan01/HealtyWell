@@ -85,7 +85,7 @@ export default function DoctorListPage() {
       return
     }
 
-    fetch("http://localhost:5000/doctors", {
+    fetch("https://backend.hostspot.online/doctors", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -131,7 +131,7 @@ export default function DoctorListPage() {
     const token = localStorage.getItem("token")
     
     try {
-      const res = await fetch("http://localhost:5000/consultations", {
+      const res = await fetch("https://backend.hostspot.online/consultations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

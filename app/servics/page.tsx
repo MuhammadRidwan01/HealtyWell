@@ -97,9 +97,20 @@ export default function ServicesPage() {
                 transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
                 className="inline-block rounded-full bg-teal-100 p-2 dark:bg-teal-900/30"
               >
-                <div className="rounded-full bg-teal-500 p-2">
-                  <Bot className="h-6 w-6 text-white" />
-                </div>
+                <div className="rounded-full bg-gradient-to-br from-teal-400 to-teal-600 p-4 shadow-sm transition-transform duration-200">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-10 w-10 text-white"
+              >
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </div>
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0 }}
