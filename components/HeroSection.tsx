@@ -106,7 +106,7 @@ export function HeroSection() {
             "transition-all duration-700 delay-[200ms]"
           )}>
             <Image
-              src="/placeholder.svg?height=600&width=600"
+              src="https://www.eon.com/adobe/dynamicmedia/deliver/dm-aid--943e7459-bcc9-4ffc-ada6-90040ca46789/cq5dam.web.1280.427.jpeg?quality=90&crop=0,0,3000,1000&preferwebp=true&width=1920"
               alt="Wellness lifestyle"
               fill
               className="object-cover"

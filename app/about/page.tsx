@@ -6,6 +6,7 @@ import { LiveChat } from "@/components/live-chat"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import { CTASection } from "@/components/CTASection"
 
 export default function AboutPage() {
   // Track whether the component has mounted to avoid hydration issues
@@ -158,18 +159,17 @@ export default function AboutPage() {
                   </p>
                 </div>
               </motion.div>
-              <motion.div 
+                <motion.div 
                 variants={fadeInRight}
-                className="relative h-[400px] overflow-hidden rounded-xl shadow-xl"
-              >
+                className="relative w-full max-w-full h-[400px] overflow-hidden rounded-xl shadow-xl"
+                >
                 <Image 
-                  src="/images/about-story.jpg" 
+                  src="https://www.alliance-scotland.org.uk/health-and-social-care-integration/wp-content/uploads/sites/4/2024/02/Untitled-design-14.png" 
                   alt="HealtyWell founding team" 
                   fill 
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
-              </motion.div>
+                </motion.div>
             </div>
           </div>
         </motion.section>
@@ -188,7 +188,7 @@ export default function AboutPage() {
                 className="order-2 lg:order-1 relative h-[400px] overflow-hidden rounded-xl shadow-xl"
               >
                 <Image 
-                  src="/images/about-vision.jpg" 
+                  src="https://www.verywellmind.com/thmb/tmd85KCwXZn9er2n5oQTOCBiO1I=/3125x0/filters:no_upscale():max_bytes(150000):strip_icc()/meditation-4157199_round2_standardsizing-7f47dee543b74e3282f6604e8e9ef126.png" 
                   alt="Digital health visualization" 
                   fill 
                   className="object-cover"
@@ -333,84 +333,52 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight">Meet Our Team</h2>
               <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Our diverse team of healthcare professionals, technologists, and wellness experts is united by a common mission: 
-                to make personalized health accessible to everyone.
+          Our diverse team of healthcare professionals, technologists, and wellness experts is united by a common mission: 
+          to make personalized health accessible to everyone.
               </p>
             </div>
-            <div className="grid gap-8 md:grid-cols-4">
+            <div className="grid gap-8 md:grid-cols-3">
               {[
-                {
-                  name: "Dr. Sarah Chen",
-                  role: "Chief Medical Officer",
-                  image: "/images/team-1.jpg"
-                },
-                {
-                  name: "Michael Rodriguez",
-                  role: "Chief Technology Officer",
-                  image: "/images/team-2.jpg"
-                },
-                {
-                  name: "Aisha Patel",
-                  role: "Head of Nutrition",
-                  image: "/images/team-3.jpg"
-                },
-                {
-                  name: "David Kim",
-                  role: "Head of User Experience",
-                  image: "/images/team-4.jpg"
-                }
+          {
+            name: "REVAN FAHRIANSYAH",
+            role: "Co-Founder & CTO",
+            image: "https://lh3.googleusercontent.com/ofTAPjI_b6Ap-_JxTjDd7LHDX2lhybVXnhiMe09ltWz5-wGJc7lCsfMjcvEIjgXof_S_hhcKwcmtro4NhcLWFLCO1r5AG17MompmXklnFew3Qs5NdjntIeWBH7hHDsaVDg=w1280"
+          },
+          {
+            name: "MUHAMMAD RIDWAN",
+            role: "Co-Founder & CEO",
+            image: "https://lh3.googleusercontent.com/xS8Lbpl5LCPkA2vrp7Hk6-Iq1-oeCEWR0HDfuw7C-qtHfMJdgOH8jQeAjnvC5R6a0_wW6p-v6Ygwcq96ggahUhrWmVNd24esZaVxoJRkCEd4qVAhe4TbKM63zr8y-rZIEA=w1280"
+          },
+          {
+            name: "PIERRE MAYSAR ALZHEYREY",
+            role: "Co-Founder & CTO",
+            image: "/pier.JPG",
+          }
               ].map((member, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                  <div className="relative h-64 w-full">
-                    <Image 
-                      src={member.image} 
-                      alt={member.name} 
-                      fill 
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 25vw"
-                    />
-                  </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg">{member.name}</h3>
-                    <p className="text-gray-600 dark:text-gray-300">{member.role}</p>
-                  </div>
-                </div>
+          <div 
+            key={index} 
+            className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow group"
+          >
+            <div className="relative h-64 w-full overflow-hidden">
+              <Image 
+                src={member.image} 
+                alt={member.name} 
+                fill 
+                className="object-contain transition-transform duration-300 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div className="p-4 text-center">
+              <h3 className="font-bold text-lg">{member.name}</h3>
+              <p className="text-gray-600 dark:text-gray-300">{member.role}</p>
+            </div>
+          </div>
               ))}
             </div>
           </div>
         </section>
-
-        {/* Join Us Section */}
-        <section className="py-16 md:py-24 bg-teal-500 text-white">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-8 lg:grid-cols-2 items-center">
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight mb-4">Join Us on Our Mission</h2>
-                <p className="mb-6">
-                  At HealtyWell, we're just getting started. Our vision for transforming healthcare through personalized 
-                  wellness solutions is ambitious, and we invite you to be part of this journey.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <button className="bg-white text-teal-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
-                    Get Started Today
-                  </button>
-                  <button className="bg-transparent border border-white px-6 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
-                    Contact Us
-                  </button>
-                </div>
-              </div>
-              <div className="relative h-[300px] overflow-hidden rounded-xl shadow-xl">
-                <Image 
-                  src="/images/join-us.jpg" 
-                  alt="Join HealtyWell" 
-                  fill 
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+        <CTASection />
       </main>
       <Footer />
       <LiveChat />
