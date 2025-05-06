@@ -115,7 +115,7 @@ function MonthPicker({ currentMonth, currentYear, onSelect }) {
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ]
   
-  // Use window.innerWidth to determine if we should show short month names
+  // pake window.innerWidth untuk milih month full atau tidak
   const [isMobile, setIsMobile] = React.useState(false)
   
   React.useEffect(() => {
