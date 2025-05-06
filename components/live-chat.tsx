@@ -359,7 +359,7 @@ export function LiveChat() {
                            Online
                          </span>
                        </div>
-                       <p className="text-xs text-teal-50/80">Siap membantu pertanyaan kesehatan Anda</p>
+                       <p className="text-xs text-teal-50/80">Ready to help with your health questions</p>
                      </div>
                    </div>
                    <Button
@@ -381,7 +381,7 @@ export function LiveChat() {
                        Chat
                      </TabsTrigger>
                      <TabsTrigger value="history" className="data-[state=active]:bg-background">
-                       Riwayat
+                       History
                      </TabsTrigger>
                    </TabsList>
        
@@ -451,7 +451,7 @@ export function LiveChat() {
                            <Input
                              value={newMessage}
                              onChange={(e) => setNewMessage(e.target.value)}
-                             placeholder="Ketik pesan Anda..."
+                             placeholder="Type your message..."
                              className="flex-1 bg-muted/30"
                              disabled={isLoading}
                            />
@@ -462,7 +462,7 @@ export function LiveChat() {
                              className="bg-teal-500 text-white hover:bg-teal-600"
                            >
                              <Send className="h-4 w-4" />
-                             <span className="sr-only">Kirim</span>
+                             <span className="sr-only">Send</span>
                            </Button>
                          </form>
                        </div>
@@ -473,7 +473,7 @@ export function LiveChat() {
                    <TabsContent value="history" className="data-[state=active]:flex-1 overflow-hidden flex flex-col">
                      <div className="flex-1 overflow-y-auto p-4">
                        <div className="flex justify-between items-center mb-4">
-                         <h3 className="font-medium">Percakapan Sebelumnya</h3>
+                         <h3 className="font-medium">Previous Conversations</h3>
                          <Button
                            variant="outline"
                            size="sm"
@@ -481,13 +481,13 @@ export function LiveChat() {
                            onClick={createNewSession}
                          >
                            <Plus className="h-3.5 w-3.5" />
-                           Baru
+                           New
                          </Button>
                        </div>
                        
                        {chatSessions.length === 0 ? (
                          <div className="flex h-full items-center justify-center">
-                           <p className="text-sm text-muted-foreground">Belum ada percakapan</p>
+                           <p className="text-sm text-muted-foreground">No conversations yet</p>
                          </div>
                        ) : (
                          <div className="space-y-2">
@@ -504,7 +504,7 @@ export function LiveChat() {
                                >
                                  <h4 className="font-medium truncate">{session.title}</h4>
                                  <p className="text-xs text-muted-foreground truncate">
-                                   {session.messages.length} pesan
+                                   {session.messages.length} messages
                                  </p>
                                </button>
                                <Button
@@ -517,15 +517,15 @@ export function LiveChat() {
                                  }}
                                >
                                  <X className="h-4 w-4" />
-                                 <span className="sr-only">Hapus</span>
+                                 <span className="sr-only">Delete</span>
                                </Button>
                              </div>
                            ))}
                          </div>
                        )}
                      </div>
-                   </TabsContent>
-                 </Tabs>
+                   </TabsContent>                 
+                   </Tabs>
                </div>
              )}
        
@@ -533,22 +533,21 @@ export function LiveChat() {
              <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                <AlertDialogContent>
                  <AlertDialogHeader>
-                   <AlertDialogTitle>Hapus Percakapan</AlertDialogTitle>
+                   <AlertDialogTitle>Delete Conversation</AlertDialogTitle>
                    <AlertDialogDescription>
-                     Apakah Anda yakin ingin menghapus percakapan ini? Tindakan ini tidak dapat dibatalkan.
+                     Are you sure you want to delete this conversation? This action cannot be undone.
                    </AlertDialogDescription>
                  </AlertDialogHeader>
                  <AlertDialogFooter>
-                   <AlertDialogCancel>Batal</AlertDialogCancel>
+                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                    <AlertDialogAction
                      onClick={() => sessionToDelete && deleteSession(sessionToDelete)}
                      className="bg-red-500 text-white hover:bg-red-600"
                    >
-                     Hapus
+                     Delete
                    </AlertDialogAction>
                  </AlertDialogFooter>
                </AlertDialogContent>
-             </AlertDialog>
-           </>
+             </AlertDialog>           </>
          )
        }
