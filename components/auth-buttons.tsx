@@ -209,45 +209,62 @@ export function AuthButtons() {
 
       if (!res.ok) {
         // Check for various error conditions
-        if (responseData.message && 
-            (Array.isArray(responseData.message) ? 
-              responseData.message.some((msg: string) => 
-                msg.toLowerCase().includes('already exists') || 
-                msg.toLowerCase().includes('duplicate')
-              ) : 
-              responseData.message.toLowerCase().includes('already exists') || 
-              responseData.message.toLowerCase().includes('duplicate')
-            )) {
-        
-          setRegisterError("This email is already registered. Please sign in instead.")
-          toast({
-            title: "Email Already Registered",
-            description: "This email is already registered. Please sign in instead.",
-            variant: "destructive",
-          })
-          
-          // Switch to sign-in tab and pre-fill the email
-          const signInTab = document.querySelector('[value="signin"]') as HTMLElement;
-          if (signInTab) {
-            signInTab.click();
+        if (responseData.message) {
+          const errorMessage = Array.isArray(responseData.message) ? 
+            responseData.message[0] : responseData.message;
             
-            // Wait for tab switch to complete before trying to fill the email field
-            setTimeout(() => {
-              const emailInput = document.getElementById('email') as HTMLInputElement;
-              if (emailInput) {
-                emailInput.value = data.email as string;
-              }
-            }, 100);
+          // Check for email already exists
+          if (errorMessage.toLowerCase().includes('email') && 
+              (errorMessage.toLowerCase().includes('already exists') || 
+               errorMessage.toLowerCase().includes('duplicate'))) {
+            
+            setRegisterError("This email is already registered. Please sign in instead.")
+            toast({
+              title: "Email Already Registered",
+              description: "This email is already registered. Please sign in instead.",
+              variant: "destructive",
+            })
+            
+            // Switch to sign-in tab and pre-fill the email
+            const signInTab = document.querySelector('[value="signin"]') as HTMLElement;
+            if (signInTab) {
+              signInTab.click();
+              
+              // Wait for tab switch to complete before trying to fill the email field
+              setTimeout(() => {
+                const emailInput = document.getElementById('email') as HTMLInputElement;
+                if (emailInput) {
+                  emailInput.value = data.email as string;
+                }
+              }, 100);
+            }
+          } 
+          // Check for username already exists
+          else if (errorMessage.toLowerCase().includes('username') && 
+                  (errorMessage.toLowerCase().includes('already exists') || 
+                   errorMessage.toLowerCase().includes('duplicate'))) {
+            
+            setRegisterError("This username is already taken. Please choose a different username.")
+            toast({
+              title: "Username Already Taken",
+              description: "This username is already taken. Please choose a different username.",
+              variant: "destructive",
+            })
+          } 
+          // Other errors
+          else {
+            setRegisterError(errorMessage || "An error occurred during registration")
+            toast({
+              title: "Registration Failed",
+              description: errorMessage || "An error occurred during registration",
+              variant: "destructive",
+            })
           }
         } else {
-          setRegisterError(Array.isArray(responseData.message) ? 
-            responseData.message[0] : 
-            responseData.message || "An error occurred during registration")
+          setRegisterError("An error occurred during registration")
           toast({
             title: "Registration Failed",
-            description: Array.isArray(responseData.message) ? 
-              responseData.message[0] : 
-              responseData.message || "An error occurred during registration",
+            description: "An error occurred during registration",
             variant: "destructive",
           })
         }
