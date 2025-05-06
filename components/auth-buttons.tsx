@@ -18,6 +18,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
+// Add this function at the top of the file, outside the AuthButtons component
+function dispatchAuthStateChangedEvent() {
+  // Create and dispatch a custom event when auth state changes
+  const event = new Event('authStateChanged');
+  window.dispatchEvent(event);
+}
+
 type UserData = {
   id: string
   firstName: string
@@ -132,6 +139,9 @@ export function AuthButtons() {
         // Update state
         setIsLoggedIn(true)
         setUserData(userData)
+        
+        // Dispatch auth state changed event
+        dispatchAuthStateChangedEvent();
         
         toast({
           title: "Login Successful",
@@ -322,16 +332,19 @@ export function AuthButtons() {
       
       toast({
         title: "Profile Updated",
-        description: "Your profile has been successfully updated.",
+        description: "Your profile information has been updated successfully.",
       })
       
-      // Close edit mode
+      // Exit edit mode
       setIsEditMode(false)
+      
+      // Dispatch auth state changed event since user data was updated
+      dispatchAuthStateChangedEvent();
     } catch (err) {
       console.error("Profile update error:", err);
       toast({
         title: "Update Error",
-        description: "There was a problem updating your profile.",
+        description: "There was a problem updating your profile. Please try again later.",
         variant: "destructive",
       })
     } finally {
@@ -349,22 +362,27 @@ export function AuthButtons() {
     setUserData(null)
     setDob(undefined)
     
+    // Dispatch auth state changed event
+    dispatchAuthStateChangedEvent();
+    
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
     })
+    
+    // Close profile dialog if open
+    setIsProfileDialogOpen(false)
   }
 
   return (
-    <>
+    <div className="flex items-center gap-2">
       {isLoggedIn ? (
-        // Show user profile when logged in
-        <div className="flex items-center gap-2">
+        <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-avatar.jpg" alt={userData?.username || "User"} />
+                  <AvatarImage src="/placeholder-avatar.jpg" alt={userDisplayData.fullName} />
                   <AvatarFallback>{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
@@ -373,9 +391,7 @@ export function AuthButtons() {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{userDisplayData.fullName}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {userData?.email}
-                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">@{userDisplayData.username}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -384,14 +400,16 @@ export function AuthButtons() {
                 <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard" className="flex items-center cursor-pointer">
+                <Link href="/dashboard">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
@@ -400,93 +418,185 @@ export function AuthButtons() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+
+          {/* Profile Dialog */}
+          <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <div className="flex flex-col items-center gap-4 py-2">
+                <Avatar className="h-20 w-20">
+                  <AvatarImage src="/placeholder-avatar.jpg" alt={userDisplayData.fullName} />
+                  <AvatarFallback className="text-xl">{getUserInitials()}</AvatarFallback>
+                </Avatar>
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold">{userDisplayData.fullName}</h3>
+                  <p className="text-sm text-muted-foreground">@{userDisplayData.username}</p>
+                  <p className="text-xs text-muted-foreground">Member since {userDisplayData.memberSince}</p>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              {isEditMode ? (
+                <form onSubmit={handleUpdateProfile} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-first-name">First Name</Label>
+                      <Input 
+                        id="edit-first-name" 
+                        name="edit-first-name" 
+                        defaultValue={userData?.firstName} 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-last-name">Last Name</Label>
+                      <Input 
+                        id="edit-last-name" 
+                        name="edit-last-name" 
+                        defaultValue={userData?.lastName} 
+                        required 
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-dob">Date of Birth</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !dob && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dob ? format(dob, "PPP") : "Pick a date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={dob}
+                          onSelect={setDob}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-phone">Phone Number</Label>
+                    <Input 
+                      id="edit-phone" 
+                      name="edit-phone" 
+                      defaultValue={userData?.phoneNumber || ''} 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-address">Address</Label>
+                    <Input 
+                      id="edit-address" 
+                      name="edit-address" 
+                      defaultValue={userData?.address || ''} 
+                    />
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <Button type="button" variant="outline" onClick={() => setIsEditMode(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Save Changes
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                      <div>
+                        <p className="text-sm font-medium">Email</p>
+                        <p className="text-sm text-muted-foreground">{userData?.email}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Date of Birth</p>
+                        <p className="text-sm text-muted-foreground">{userDisplayData.dateOfBirth}</p>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-sm font-medium">Phone</p>
+                        <p className="text-sm text-muted-foreground">{userDisplayData.phoneNumber}</p>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-sm font-medium">Address</p>
+                        <p className="text-sm text-muted-foreground">{userDisplayData.address}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <Button variant="outline" onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </Button>
+                    <Button onClick={() => setIsEditMode(true)}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      Edit Profile
+                    </Button>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
+        </>
       ) : (
-        // Show login/signup buttons when not logged in
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            className="hidden md:flex border-teal-200 hover:border-teal-300 hover:bg-teal-50 dark:border-teal-800 dark:hover:border-teal-700 dark:hover:bg-teal-900/50"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Sign In
-          </Button>
-          <Button 
-            className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-sm hover:shadow-md transition-all duration-200"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Get Started
-          </Button>
-        </div>
+        <Button onClick={() => setIsDialogOpen(true)}>Sign In</Button>
       )}
 
       {/* Auth Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-[425px]">
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="signin" className="space-y-4">
+            <TabsContent value="signin" className="mt-4">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
+                  <Input id="email" name="email" type="email" required />
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password">Password</Label>
-                    <Button variant="link" className="h-auto p-0 text-xs text-teal-600 hover:text-teal-700">
+                    <Button variant="link" className="h-auto p-0 text-xs">
                       Forgot password?
                     </Button>
                   </div>
                   <Input id="password" name="password" type="password" required />
                 </div>
                 {loginError && (
-                  <div className="text-sm text-red-500">{loginError}</div>
+                  <p className="text-sm text-destructive">{loginError}</p>
                 )}
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Signing In...</span>
-                    </div>
-                  ) : (
-                    "Sign In"
-                  )}
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Sign In
                 </Button>
               </form>
-              <div className="mt-4 text-center text-sm">
-                <span className="text-muted-foreground">Don't have an account? </span>
-                <Button 
-                  variant="link" 
-                  className="p-0 h-auto text-teal-600 hover:text-teal-700"
-                  onClick={() => {
-                    const signUpTab = document.querySelector('[value="signup"]') as HTMLElement;
-                    if (signUpTab) signUpTab.click();
-                  }}
-                >
-                  Sign up
-                </Button>
-              </div>
             </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4">
+            <TabsContent value="signup" className="mt-4">
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="first-name">First name</Label>
+                    <Label htmlFor="first-name">First Name</Label>
                     <Input id="first-name" name="first-name" required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="last-name">Last name</Label>
-                    <Input id="last-name" name="last-name" />
+                    <Label htmlFor="last-name">Last Name</Label>
+                    <Input id="last-name" name="last-name" required />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -494,15 +604,11 @@ export function AuthButtons() {
                   <Input id="username" name="username" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email-signup">Email</Label>
-                  <Input id="email-signup" name="email-signup" type="email" required />
-                </div>
-                <div className="space-y-2">
                   <Label>Date of Birth (optional)</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !dob && "text-muted-foreground"
@@ -524,6 +630,10 @@ export function AuthButtons() {
                   </Popover>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="email-signup">Email</Label>
+                  <Input id="email-signup" name="email-signup" type="email" required />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="password-signup">Password</Label>
                   <Input id="password-signup" name="password-signup" type="password" required />
                 </div>
@@ -532,189 +642,17 @@ export function AuthButtons() {
                   <Input id="confirm-password" name="confirm-password" type="password" required />
                 </div>
                 {registerError && (
-                  <div className="text-sm text-red-500">{registerError}</div>
+                  <p className="text-sm text-destructive">{registerError}</p>
                 )}
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Creating Account...</span>
-                    </div>
-                  ) : (
-                    "Create Account"
-                  )}
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Account
                 </Button>
               </form>
-              <div className="mt-4 text-center text-sm">
-                <span className="text-muted-foreground">Already have an account? </span>
-                <Button 
-                  variant="link" 
-                  className="p-0 h-auto text-teal-600 hover:text-teal-700"
-                  onClick={() => {
-                    const signInTab = document.querySelector('[value="signin"]') as HTMLElement;
-                    if (signInTab) signInTab.click();
-                  }}
-                >
-                  Sign in
-                </Button>
-              </div>
             </TabsContent>
           </Tabs>
         </DialogContent>
       </Dialog>
-
-      {/* Profile Dialog */}
-      <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <div className="flex flex-col items-center justify-center space-y-3 border-b pb-6">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src="/placeholder-avatar.jpg" alt={userData?.username || "User"} />
-              <AvatarFallback className="text-lg">{getUserInitials()}</AvatarFallback>
-            </Avatar>
-            <div className="space-y-1 text-center">
-              <h2 className="text-xl font-semibold">{userDisplayData.fullName}</h2>
-              <p className="text-sm text-muted-foreground">@{userDisplayData.username}</p>
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <span>Member since {userDisplayData.memberSince}</span>
-            </div>
-          </div>
-
-          {isEditMode ? (
-            // Edit Profile Form
-            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-first-name">First name</Label>
-                  <Input 
-                    id="edit-first-name" 
-                    name="edit-first-name" 
-                    defaultValue={userData?.firstName || ""}
-                    required 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-last-name">Last name</Label>
-                  <Input 
-                    id="edit-last-name" 
-                    name="edit-last-name" 
-                    defaultValue={userData?.lastName || ""}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Date of Birth</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !dob && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dob ? format(dob, "PPP") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={dob}
-                      onSelect={setDob}
-                      initialFocus
-                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-phone">Phone Number</Label>
-                <Input 
-                  id="edit-phone" 
-                  name="edit-phone" 
-                  defaultValue={userData?.phoneNumber || ""}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-address">Address</Label>
-                <Input 
-                  id="edit-address" 
-                  name="edit-address" 
-                  defaultValue={userData?.address || ""}
-                />
-              </div>
-              <div className="flex justify-between pt-4">
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  onClick={() => setIsEditMode(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit"
-                  className="bg-teal-600 hover:bg-teal-700"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Saving...</span>
-                    </div>
-                  ) : (
-                    "Save Changes"
-                  )}
-                </Button>
-              </div>
-            </form>
-          ) : (
-            // Profile Info Display
-            <div className="space-y-4 pt-4">
-              <div className="grid grid-cols-[120px_1fr] items-center">
-                <span className="text-sm font-medium">Email:</span>
-                <span className="text-sm">{userData?.email}</span>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-[120px_1fr] items-center">
-                <span className="text-sm font-medium">Date of Birth:</span>
-                <span className="text-sm">{userDisplayData.dateOfBirth}</span>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-[120px_1fr] items-center">
-                <span className="text-sm font-medium">Phone:</span>
-                <span className="text-sm">{userDisplayData.phoneNumber}</span>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-[120px_1fr] items-start">
-                <span className="text-sm font-medium">Address:</span>
-                <p className="text-sm text-muted-foreground">{userDisplayData.address}</p>
-              </div>
-              <div className="flex justify-between pt-4">
-                <Button 
-                  variant="outline"
-                  asChild
-                >
-                  <Link href="/dashboard" className="flex items-center">
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                    <span>Go to Dashboard</span>
-                  </Link>
-                </Button>
-                <Button 
-                  onClick={() => setIsEditMode(true)}
-                  className="bg-teal-600 hover:bg-teal-700"
-                >
-                  Edit Profile
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+    </div>
   )
 }

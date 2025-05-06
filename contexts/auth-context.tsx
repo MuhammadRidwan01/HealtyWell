@@ -34,6 +34,13 @@ interface RegisterData {
   dateOfBirth?: string;
 }
 
+// Add this function at the top of the file, outside the AuthProvider component
+function dispatchAuthStateChangedEvent() {
+  // Create and dispatch a custom event when auth state changes
+  const event = new Event('authStateChanged');
+  window.dispatchEvent(event);
+}
+
 // Ekspor AuthContext agar bisa diimpor di file lain
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -125,6 +132,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('user', JSON.stringify(userData))
       setUser(userData)
       
+      // Dispatch auth state changed event
+      dispatchAuthStateChangedEvent();
+      
     } catch (err) {
       console.error("Login error:", err)
       setError(err instanceof Error ? err.message : "An error occurred during login")
@@ -192,6 +202,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('user')
     setToken(null)
     setUser(null)
+    
+    // Dispatch auth state changed event
+    dispatchAuthStateChangedEvent();
   }
 
   const value = {
