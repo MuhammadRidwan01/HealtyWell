@@ -23,7 +23,7 @@ export function Footer() {
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
               </div>
-              <span className="text-xl font-bold">VitalityHub</span>
+              <span className="text-xl font-bold">HealtyWell</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               Empowering you to live your healthiest life through personalized wellness solutions and expert guidance.
