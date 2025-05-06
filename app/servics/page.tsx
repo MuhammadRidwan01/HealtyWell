@@ -248,10 +248,12 @@ export default function ServicesPage() {
                       </motion.ul>
                     </CardContent>
                     <CardFooter>
+                      <a href="/doctors" className="w-full">
                       <Button className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 group">
                         Try Now
                         <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </Button>
+                      </a>
                     </CardFooter>
                   </Card>
                 </motion.div>

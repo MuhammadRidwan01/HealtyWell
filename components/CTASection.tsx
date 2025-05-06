@@ -13,16 +13,18 @@ export function CTASection() {
             personalized programs.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
+          <a href="/doctors" className="w-full">
             <Button size="lg" variant="secondary" className="bg-white text-teal-600 hover:bg-white/90">
               Get Started Today
             </Button>
-            <Button
+          </a>
+            {/* <Button
               size="lg"
               variant="outline"
               className="border-white bg-transparent text-white hover:bg-white/20"
             >
               Schedule a Consultation
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

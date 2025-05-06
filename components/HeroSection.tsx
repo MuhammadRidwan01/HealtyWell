@@ -66,10 +66,12 @@ export function HeroSection() {
             </p>
 
             <div className="flex flex-wrap gap-4 mb-8">
+              <a href="/doctors" >
               <Button size="lg" className="bg-teal-500 text-white hover:bg-teal-600 group">
                 Explore Personalized Plans
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
+              </a>
 
                 <Button
                 variant="outline"
@@ -215,10 +217,12 @@ export function HeroSection() {
               <div className="mb-4">{feature.icon}</div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{feature.title}</h3>
               <p className="text-slate-700 dark:text-gray-300">{feature.description}</p>
+              <a href="/servics">
               <Button variant="link" className="text-teal-600 dark:text-teal-400 p-0 mt-4 hover:text-teal-700 dark:hover:text-teal-300 group">
                 Learn more
                 <ArrowRight className="ml-1 h-4 w-4 inline transition-transform group-hover:translate-x-1" />
               </Button>
+              </a>
             </div>
           ))}
         </div>
