@@ -71,13 +71,14 @@ export function HeroSection() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
 
-              <Button
+                <Button
                 variant="outline"
                 size="lg"
                 className="border-slate-300 bg-white/50 text-slate-800 backdrop-blur-sm hover:bg-white/80 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-              >
+                onClick={() => window.open("https://www.youtube.com/watch?v=xvFZjo5PgG0", "_blank")}
+                >
                 <Play className="mr-2 h-4 w-4" /> Watch How It Works
-              </Button>
+                </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -106,7 +107,7 @@ export function HeroSection() {
             "transition-all duration-700 delay-[200ms]"
           )}>
             <Image
-              src="/placeholder.svg?height=600&width=600"
+              src="https://www.eon.com/adobe/dynamicmedia/deliver/dm-aid--943e7459-bcc9-4ffc-ada6-90040ca46789/cq5dam.web.1280.427.jpeg?quality=90&crop=0,0,3000,1000&preferwebp=true&width=1920"
               alt="Wellness lifestyle"
               fill
               className="object-cover"
