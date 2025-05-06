@@ -56,11 +56,10 @@ export function Header() {
           {[
             { href: "/", label: "Home" },
             { href: "/about", label: "About Us" },
-            { href: "/services", label: "Services" },
+            { href: "/servics", label: "Services" },
             { href: "/blog", label: "Blog" },
             { href: "/contact", label: "Contact" },
-            // Tambahkan link Dashboard hanya jika pengguna sudah login
-            ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
+         
           ].map((item, index) => (
             <Link 
               key={index}
