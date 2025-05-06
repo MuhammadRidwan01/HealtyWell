@@ -71,13 +71,14 @@ export function HeroSection() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
 
-              <Button
+                <Button
                 variant="outline"
                 size="lg"
                 className="border-slate-300 bg-white/50 text-slate-800 backdrop-blur-sm hover:bg-white/80 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-              >
+                onClick={() => window.open("https://www.youtube.com/watch?v=xvFZjo5PgG0", "_blank")}
+                >
                 <Play className="mr-2 h-4 w-4" /> Watch How It Works
-              </Button>
+                </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
