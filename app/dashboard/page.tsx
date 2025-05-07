@@ -14,6 +14,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts"
 import {motion} from "framer-motion"
+import Link from "next/link"
 // Data untuk charts
 const activityData = [
     { name: "Sen", steps: 7500, calories: 320, target: 10000 },
@@ -279,26 +280,29 @@ export default function DashboardPage() {
                             <CardDescription>Your current health status</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid grid-cols-1 gap-4">
-                                {consultations.map((c) => (
+                            <div className="grid grid-cols-1 gap-3">
+                                {consultations.slice(0, 4).map((c) => (
                                     <motion.div
                                         key={c.id}
                                         variants={item}
                                         layoutId={`consultation-${c.id}`}
-                                        className={`relative overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg ${
+                                        className={`relative overflow-hidden rounded-lg shadow-sm transition-all duration-300 hover:shadow-md ${
                                             c.status === 'active'
-                                                ? 'bg-white dark:bg-gray-800 border-l-4 border-l-teal-500'
+                                                ? 'border-l-4 border-l-teal-500'
                                                 : c.status === 'pending'
-                                                    ? 'bg-white dark:bg-gray-800 border-l-4 border-l-yellow-500'
+                                                    ? 'border-l-4 border-l-yellow-500'
                                                     : c.status === 'completed'
-                                                        ? 'bg-white dark:bg-gray-800 border-l-4 border-l-green-500'
-                                                        : 'bg-white dark:bg-gray-800 border-l-4 border-l-red-500'
+                                                        ? 'border-l-4 border-l-green-500'
+                                                        : 'border-l-4 border-l-red-500'
                                         }`}
                                     >
-                                        <div className="p-4">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <h3 className="text-lg font-semibold">{c.doctor.name}</h3>
-                                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                        <div className="p-3">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h3 className="text-sm font-semibold">{c.doctor.name}</h3>
+                                                    <p className="text-xs text-gray-600 dark:text-gray-300">{c.doctor.specialization}</p>
+                                                </div>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                                     c.status === 'active' ? 'bg-teal-100 text-teal-800' :
                                                     c.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                                     c.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -307,14 +311,13 @@ export default function DashboardPage() {
                                                     {c.status}
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{c.doctor.specialization}</p>
-                                            <div className="flex items-center text-sm text-gray-500">
-                                                <CalendarIcon className="w-4 h-4 mr-1" />
-                                                {c.notes || 'No additional notes'}
-                                            </div>
                                         </div>
                                     </motion.div>
-                                ))}                            </div>
+                                ))}
+                            </div>
+                            <Button variant="link" className="w-full mt-3" asChild>
+                                <Link href="/my-appointments">Lihat Semua Jadwal</Link>
+                            </Button>
                         </CardContent>
                     </Card>
                 </div>
