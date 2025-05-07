@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Loader2, User, Calendar, Activity, Heart, Brain, Apple, TrendingUp, Droplets } from "lucide-react"
+import { Loader2, User, Calendar, Activity, Heart, Brain, Apple, TrendingUp, Droplets, CalendarIcon } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import {
     AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts"
-
+import {motion} from "framer-motion"
 // Data untuk charts
 const activityData = [
     { name: "Sen", steps: 7500, calories: 320, target: 10000 },
@@ -54,12 +54,50 @@ const healthScoreData = [
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+interface Consultation {
+    id: number
+    status: string
+    notes?: string
+    doctor: {
+      name: string
+      specialization: string
+      photoUrl?: string
+    }
+  }
+
 export default function DashboardPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [userData, setUserData] = useState<any>(null)
     const router = useRouter()
     const { toast } = useToast()
-
+    const [consultations, setConsultations] = useState<Consultation[]>([])
+    const handleSessionInvalid = () => {
+        toast({
+          title: "Sesi tidak valid",
+          description: "Silakan login kembali.",
+          variant: "destructive",
+        })
+    
+        // Hapus token dan data user
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+    
+        // Redirect ke halaman login atau home
+        router.push("/")
+      }
+      const item = {
+        hidden: { y: 20, opacity: 0 },
+        show: { 
+          y: 0, 
+          opacity: 1,
+          transition: {
+            type: "spring",
+            stiffness: 80,
+            damping: 12
+          }
+        }
+      }
+    
     useEffect(() => {
         // Periksa apakah pengguna sudah login
         const token = localStorage.getItem('token')
@@ -93,8 +131,37 @@ export default function DashboardPage() {
             })
             router.push('/')
         }
+        fetch("https://backend.hostspot.online/consultations", {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },
+          })
+            .then(async (res) => {
+              if (res.status === 401) {
+                handleSessionInvalid()
+                return
+              }
+      
+              const text = await res.text()
+              try {
+                const data = JSON.parse(text)
+                if (Array.isArray(data)) {
+                  setConsultations(data)
+                } else {
+                  console.error("Data bukan array:", data)
+                  setConsultations([])
+                }
+              } catch (err) {
+                console.error("Gagal parse JSON:", err)
+                setConsultations([])
+              }
+      
+            })
+            .catch((err) => {
+              console.error("Fetch gagal:", err)
+              setConsultations([])
+            })
     }, [router, toast])
-
     if (isLoading) {
         return (
             <div className="flex h-screen w-full items-center justify-center">
@@ -172,7 +239,7 @@ export default function DashboardPage() {
                     <Card className="overflow-hidden border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                         <CardHeader className="pb-2 bg-gradient-to-r from-teal-500/10 to-teal-600/10">
                             <CardTitle>Profil Pengguna</CardTitle>
-                            <CardDescription>Informasi pribadi Anda</CardDescription>
+                            <CardDescription>Your personal information</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-col items-center space-y-4 pt-4">
@@ -184,116 +251,70 @@ export default function DashboardPage() {
                                     <h3 className="text-xl font-bold">{userData?.firstName} {userData?.lastName}</h3>
                                     <p className="text-sm text-muted-foreground">{userData?.email}</p>
                                 </div>
-                                <div className="w-full space-y-3 pt-4">
+                                {/* <div className="w-full space-y-3 pt-4">
                                     <div className="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
-                                        <span className="text-sm font-medium">Umur:</span>
-                                        <span className="text-sm font-semibold">{userData?.age || "Belum diisi"}</span>
+                                        <span className="text-sm font-medium">Age:</span>
+                                        <span className="text-sm font-semibold">{userData?.age || "Not filled"}</span>
                                     </div>
                                     <div className="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
-                                        <span className="text-sm font-medium">Jenis Kelamin:</span>
-                                        <span className="text-sm font-semibold">{userData?.gender || "Belum diisi"}</span>
+                                        <span className="text-sm font-medium">Gender:</span>
+                                        <span className="text-sm font-semibold">{userData?.gender || "Not filled"}</span>
                                     </div>
                                     <div className="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
-                                        <span className="text-sm font-medium">Tinggi:</span>
-                                        <span className="text-sm font-semibold">{userData?.height ? `${userData.height} cm` : "Belum diisi"}</span>
+                                        <span className="text-sm font-medium">Height:</span>
+                                        <span className="text-sm font-semibold">{userData?.height ? `${userData.height} cm` : "Not filled"}</span>
                                     </div>
                                     <div className="flex items-center justify-between rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
-                                        <span className="text-sm font-medium">Berat:</span>
-                                        <span className="text-sm font-semibold">{userData?.weight ? `${userData.weight} kg` : "Belum diisi"}</span>
+                                        <span className="text-sm font-medium">Weight:</span>
+                                        <span className="text-sm font-semibold">{userData?.weight ? `${userData.weight} kg` : "Not filled"}</span>
                                     </div>
-                                </div>
-                                <Button className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 shadow-md hover:shadow-lg transition-all duration-200">Edit Profil</Button>
+                                </div>                                <Button className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 shadow-md hover:shadow-lg transition-all duration-200">Edit Profil</Button> */}
                             </div>
                         </CardContent>
                     </Card>
 
                     <Card className="border-none shadow-md dark:bg-gray-800/50 backdrop-blur-sm">
                         <CardHeader className="pb-2 bg-gradient-to-r from-teal-500/10 to-teal-600/10">
-                            <CardTitle>Ringkasan Kesehatan</CardTitle>
-                            <CardDescription>Status kesehatan Anda saat ini</CardDescription>
+                            <CardTitle>Health Summary</CardTitle>
+                            <CardDescription>Your current health status</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                                <div className="col-span-1 lg:col-span-2">
-                                    <div className="mb-4">
-                                        <h3 className="text-sm font-medium mb-2">Skor Kesehatan Keseluruhan</h3>
-                                        <div className="h-[180px] w-full">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <PieChart>
-                                                    <Pie
-                                                        data={healthScoreData}
-                                                        cx="50%"
-                                                        cy="50%"
-                                                        innerRadius={60}
-                                                        outerRadius={80}
-                                                        paddingAngle={2}
-                                                        dataKey="value"
-                                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                                        labelLine={false}
-                                                    >
-                                                        {healthScoreData.map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                        ))}
-                                                    </Pie>
-                                                    <Tooltip formatter={(value) => [`${value}%`, 'Skor']} />
-                                                </PieChart>
-                                            </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <Activity className="mr-2 h-5 w-5 text-teal-600" />
-                                                <h3 className="font-medium">Aktivitas Fisik</h3>
+                            <div className="grid grid-cols-1 gap-4">
+                                {consultations.map((c) => (
+                                    <motion.div
+                                        key={c.id}
+                                        variants={item}
+                                        layoutId={`consultation-${c.id}`}
+                                        className={`relative overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg ${
+                                            c.status === 'active'
+                                                ? 'bg-white dark:bg-gray-800 border-l-4 border-l-teal-500'
+                                                : c.status === 'pending'
+                                                    ? 'bg-white dark:bg-gray-800 border-l-4 border-l-yellow-500'
+                                                    : c.status === 'completed'
+                                                        ? 'bg-white dark:bg-gray-800 border-l-4 border-l-green-500'
+                                                        : 'bg-white dark:bg-gray-800 border-l-4 border-l-red-500'
+                                        }`}
+                                    >
+                                        <div className="p-4">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="text-lg font-semibold">{c.doctor.name}</h3>
+                                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                                    c.status === 'active' ? 'bg-teal-100 text-teal-800' :
+                                                    c.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                    c.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                    'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {c.status}
+                                                </span>
                                             </div>
-                                            <span className="text-sm font-semibold text-teal-600">78%</span>
-                                        </div>
-                                        <Progress value={78} className="h-2 w-full bg-slate-200" />
-                                        <p className="text-xs text-muted-foreground">Anda telah mencapai 78% dari target aktivitas mingguan</p>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <Apple className="mr-2 h-5 w-5 text-teal-600" />
-                                                <h3 className="font-medium">Nutrisi</h3>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{c.doctor.specialization}</p>
+                                            <div className="flex items-center text-sm text-gray-500">
+                                                <CalendarIcon className="w-4 h-4 mr-1" />
+                                                {c.notes || 'No additional notes'}
                                             </div>
-                                            <span className="text-sm font-semibold text-teal-600">65%</span>
                                         </div>
-                                        <Progress value={65} className="h-2 w-full bg-slate-200" />
-                                        <p className="text-xs text-muted-foreground">Anda telah mencapai 65% dari target nutrisi harian</p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <Heart className="mr-2 h-5 w-5 text-teal-600" />
-                                                <h3 className="font-medium">Kesehatan Jantung</h3>
-                                            </div>
-                                            <span className="text-sm font-semibold text-teal-600">92%</span>
-                                        </div>
-                                        <Progress value={92} className="h-2 w-full bg-slate-200" />
-                                        <p className="text-xs text-muted-foreground">Detak jantung dan tekanan darah Anda dalam kondisi baik</p>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <Brain className="mr-2 h-5 w-5 text-teal-600" />
-                                                <h3 className="font-medium">Kesehatan Mental</h3>
-                                            </div>
-                                            <span className="text-sm font-semibold text-teal-600">85%</span>
-                                        </div>
-                                        <Progress value={85} className="h-2 w-full bg-slate-200" />
-                                        <p className="text-xs text-muted-foreground">Tingkat stres dan kualitas tidur Anda dalam kondisi baik</p>
-                                    </div>
-                                </div>
-                            </div>
+                                    </motion.div>
+                                ))}                            </div>
                         </CardContent>
                     </Card>
                 </div>
@@ -311,7 +332,7 @@ export default function DashboardPage() {
                         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             <Card className="border-none shadow-md hover:shadow-lg transition-all duration-200 dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Langkah Harian</CardTitle>
+                                    <CardTitle className="text-sm font-medium">Daily Steps</CardTitle>
                                     <div className="rounded-full bg-teal-100 p-2 dark:bg-teal-900/20">
                                         <TrendingUp className="h-4 w-4 text-teal-600" />
                                     </div>
@@ -319,14 +340,13 @@ export default function DashboardPage() {
                                 <CardContent>
                                     <div className="text-2xl font-bold">8,423</div>
                                     <p className="text-xs text-muted-foreground">
-                                        <span className="text-green-500 font-medium">+12%</span> dari minggu lalu
+                                        <span className="text-green-500 font-medium">+12%</span> from last week
                                     </p>
                                     <div className="mt-4 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                         <div className="h-full bg-gradient-to-r from-teal-400 to-teal-600 rounded-full" style={{ width: '84.2%' }}></div>
                                     </div>
-                                    <p className="mt-1 text-xs text-right text-muted-foreground">84.2% dari target</p>
-                                </CardContent>
-                            </Card>
+                                    <p className="mt-1 text-xs text-right text-muted-foreground">84.2% of target</p>
+                                </CardContent>                            </Card>
 
                             <Card className="border-none shadow-md hover:shadow-lg transition-all duration-200 dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -349,7 +369,7 @@ export default function DashboardPage() {
 
                             <Card className="border-none shadow-md hover:shadow-lg transition-all duration-200 dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Jam Tidur</CardTitle>
+                                    <CardTitle className="text-sm font-medium">Sleep Hours</CardTitle>
                                     <div className="rounded-full bg-blue-100 p-2 dark:bg-blue-900/20">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -367,16 +387,15 @@ export default function DashboardPage() {
                                     </div>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold">7.2 jam</div>
+                                    <div className="text-2xl font-bold">7.2 hours</div>
                                     <p className="text-xs text-muted-foreground">
-                                        <span className="text-green-500 font-medium">+0.5 jam</span> dari minggu lalu
+                                        <span className="text-green-500 font-medium">+0.5 hours</span> from last week
                                     </p>
                                     <div className="mt-4 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                         <div className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full" style={{ width: '90%' }}></div>
                                     </div>
-                                    <p className="mt-1 text-xs text-right text-muted-foreground">90% dari target</p>
-                                </CardContent>
-                            </Card>
+                                    <p className="mt-1 text-xs text-right text-muted-foreground">90% of target</p>
+                                </CardContent>                            </Card>
 
                             <Card className="border-none shadow-md hover:shadow-lg transition-all duration-200 dark:bg-gray-800/50 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

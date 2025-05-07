@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "HealthyWell - Your Health & Wellness Platform",
   description:
-    "A comprehensive health and wellness platform for managing your wellbeing. Founded by MUHAMMAD RIDWAN (Co-Founder & CEO), REVAN FAHRIANSYAH (Co-Founder & CTO), and PIERRE MAYSAR ALZHEYREY (Co-Founder & CTO).",
+    "health and wellness platform for managing your wellbeing. Founded by MUHAMMAD RIDWAN (Co-Founder & CEO), REVAN FAHRIANSYAH (Co-Founder & CTO), and PIERRE MAYSAR ALZHEYREY (Co-Founder & CTO).",
   keywords: "health, wellness, fitness, nutrition, mental health, telemedicine",
   generator: "healthywell.dev"
 }
