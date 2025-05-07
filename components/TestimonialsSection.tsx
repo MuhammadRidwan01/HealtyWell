@@ -21,7 +21,7 @@ export function TestimonialsSection() {
   }
 
   return (
-    <section className="w-full py-16 md:py-24 ">
+    <section className="w-full py-16 md:py-24 " id="testimonial">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <Badge className="bg-teal-500/10 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400 hover:bg-teal-500/20 dark:hover:bg-teal-500/30">
@@ -36,7 +36,7 @@ export function TestimonialsSection() {
         </div>
         
         <div className="mx-auto max-w-5xl">
-          <Carousel className="w-full" autoplay>
+          <Carousel className="w-full" >
             <CarouselContent>
               <CarouselItem>
                 <div className="flex flex-col gap-6 rounded-xl bg-white dark:bg-slate-800 p-8 shadow-sm md:flex-row md:p-10">

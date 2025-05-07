@@ -70,7 +70,7 @@ export default function MyAppointmentsPage() {
       return
     }
 
-    fetch("http://localhost:5000/consultations", {
+    fetch("https://backend.hostspot.online/consultations", {
       headers: {
         "Authorization": `Bearer ${token}`,
       },
@@ -117,7 +117,7 @@ export default function MyAppointmentsPage() {
 
     setStartingConsultation(id)
 
-    fetch(`http://localhost:5000/consultations/${id}/start`, {
+    fetch(`https://backend.hostspot.online/consultations/${id}/start`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
