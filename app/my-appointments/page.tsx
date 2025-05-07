@@ -50,8 +50,8 @@ export default function MyAppointmentsPage() {
   
   const handleSessionInvalid = () => {
     toast({
-      title: "Sesi tidak valid",
-      description: "Silakan login kembali.",
+      title: "Invalid session",
+      description: "Please login again.",
       variant: "destructive",
     })
 
@@ -131,8 +131,8 @@ export default function MyAppointmentsPage() {
 
         if (res.ok) {
           toast({
-            title: "Konsultasi dimulai",
-            description: "Anda akan diarahkan ke halaman chat.",
+            title: "Consultation started",
+            description: "You will be redirected to the chat page.",
           })
           
           // Refresh data konsultasi
@@ -143,8 +143,8 @@ export default function MyAppointmentsPage() {
         } else {
           const errorText = await res.text()
           toast({
-            title: "Gagal memulai konsultasi",
-            description: errorText || "Terjadi kesalahan pada server",
+            title: "Failed to start consultation",
+            description: errorText || "An error occurred on the server",
             variant: "destructive",
           })
         }
@@ -176,7 +176,7 @@ export default function MyAppointmentsPage() {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg">Memuat konsultasi...</span>
+        <span className="ml-2 text-lg">Loading consultations...</span>
       </div>
     )
   }
@@ -184,11 +184,11 @@ export default function MyAppointmentsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Aktif</span>
+        return <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Active</span>
       case "completed":
-        return <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Selesai</span>
+        return <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Completed</span>
       case "pending":
-        return <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Menunggu</span>
+        return <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Pending</span>
       default:
         return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">{status}</span>
     }
@@ -213,7 +213,7 @@ export default function MyAppointmentsPage() {
               <div className="rounded-full bg-teal-500 p-2">
                 <FileText className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Riwayat Konsultasi</h1>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Consultation History</h1>
             </motion.div>
             
             <motion.div
@@ -226,13 +226,13 @@ export default function MyAppointmentsPage() {
                 onClick={() => router.push("/doctors")}
                 className="border-teal-200 hover:border-teal-500 hover:bg-teal-50 dark:border-gray-700 dark:hover:border-teal-800 dark:hover:bg-teal-900/20"
               >
-                Kembali ke Daftar Dokter
+                Back to Doctor List
               </Button>
             </motion.div>
           </div>
         </div>
-      </motion.header>
 
+      </motion.header>
       <main className="container px-4 md:px-6 py-12">
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -252,12 +252,12 @@ export default function MyAppointmentsPage() {
             >
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                  {consultations.length === 0 ? 'Belum Ada Konsultasi' : 'Konsultasi Anda'}
+                  {consultations.length === 0 ? 'No Consultations Yet' : 'Your Consultations'}
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 mt-1">
                   {consultations.length === 0 
-                    ? 'Mulai konsultasi dengan dokter untuk mendapatkan bantuan medis' 
-                    : `Total ${consultations.length} konsultasi`}
+                    ? 'Start consulting with a doctor to get medical assistance' 
+                    : `Total ${consultations.length} consultations`}
                 </p>
               </div>
               
@@ -270,11 +270,10 @@ export default function MyAppointmentsPage() {
                   className="bg-teal-500 hover:bg-teal-600 text-white"
                 >
                   <User className="mr-2 h-4 w-4" />
-                  Konsultasi Baru
+                  New Consultation
                 </Button>
               </motion.div>
             </motion.div>
-
             {consultations.length === 0 ? (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -296,10 +295,10 @@ export default function MyAppointmentsPage() {
                   <MessageSquare className="h-8 w-8 text-teal-500" />
                 </motion.div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                  Belum ada riwayat konsultasi
+                  No consultation history yet
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                  Mulai konsultasi dengan dokter untuk mendapatkan bantuan medis sesuai kebutuhan Anda
+                  Start consulting with a doctor to get medical assistance tailored to your needs
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -309,7 +308,7 @@ export default function MyAppointmentsPage() {
                     onClick={() => router.push("/doctors")}
                     className="bg-teal-500 hover:bg-teal-600 text-white"
                   >
-                    Temukan Dokter
+                    Find a Doctor
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 </motion.div>
@@ -374,14 +373,14 @@ export default function MyAppointmentsPage() {
                                 <div className="flex items-center gap-2 mt-2 text-xs text-gray-500 dark:text-gray-400">
                                   <Calendar className="h-3 w-3" />
                                   <span>
-                                    Dibuat: {formatDate(c.createdAt)}
+                                    Created: {formatDate(c.createdAt)}
                                   </span>
                                 </div>
                                 {c.status === 'completed' && (
                                   <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
                                     <CheckCircle className="h-3 w-3 text-green-500" />
                                     <span>
-                                      Selesai: {formatDate(c.updatedAt)}
+                                      Completed: {formatDate(c.updatedAt)}
                                     </span>
                                   </div>
                                 )}
@@ -423,7 +422,7 @@ export default function MyAppointmentsPage() {
                                           ? 'text-yellow-800 dark:text-yellow-400'
                                           : 'text-gray-800 dark:text-gray-300'
                                     }`}>
-                                      {c.status === 'completed' ? 'Diagnosis:' : 'Catatan:'}
+                                      {c.status === 'completed' ? 'Diagnosis:' : 'Notes:'}
                                     </p>
                                     <p className={`text-sm mt-1 ${
                                       c.status === 'completed'
@@ -447,7 +446,7 @@ export default function MyAppointmentsPage() {
                                     className="bg-teal-500 hover:bg-teal-600 text-white"
                                   >
                                     <MessageSquare className="mr-2 h-4 w-4" />
-                                    Lanjutkan Chat
+                                    Continue Chat
                                   </Button>
                                 </motion.div>
                               )}
@@ -460,7 +459,7 @@ export default function MyAppointmentsPage() {
                                     className="border-teal-200 hover:border-teal-500 hover:bg-teal-50 dark:border-gray-700 dark:hover:border-teal-600 dark:hover:bg-teal-900/20"
                                   >
                                     <FileText className="mr-2 h-4 w-4" />
-                                    Lihat Riwayat Chat
+                                    View Chat History
                                   </Button>
                                 </motion.div>
                               )}
@@ -477,12 +476,12 @@ export default function MyAppointmentsPage() {
                                     {startingConsultation === c.id ? (
                                       <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Memulai...
+                                        Starting...
                                       </>
                                     ) : (
                                       <>
                                         <MessageSquare className="mr-2 h-4 w-4" />
-                                        Mulai Konsultasi
+                                        Start Consultation
                                       </>
                                     )}
                                   </Button>
@@ -497,7 +496,7 @@ export default function MyAppointmentsPage() {
                                     className="border-green-200 hover:border-green-500 hover:bg-green-50 dark:border-gray-700 dark:hover:border-green-600 dark:hover:bg-green-900/20"
                                   >
                                     <User className="mr-2 h-4 w-4" />
-                                    Konsultasi Baru
+                                    New Consultation
                                   </Button>
                                 </motion.div>
                               )}

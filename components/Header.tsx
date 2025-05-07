@@ -26,6 +26,22 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Definisikan menu items dengan kondisi
+  const menuItems = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About Us" },
+    { href: "/servics", label: "Services" },
+    { href: "/blog", label: "Blog" },
+    { href: "/contact", label: "Contact" },
+    // Tampilkan menu Ai Doctor dan My Appointments hanya jika sudah login
+    ...(isAuthenticated ? [
+      { href: "/doctors", label: "Ai Doctor" },
+      { href: "/my-appointments", label: "My Appointments" },
+    ] : []),
+    // Tambahkan link Dashboard jika pengguna sudah login
+    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
+  ];
+
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200",
@@ -53,16 +69,7 @@ export function Header() {
         </div>
 
         <nav className="hidden md:flex md:gap-8">
-          {[
-            { href: "/", label: "Home" },
-            { href: "/about", label: "About Us" },
-            { href: "/servics", label: "Services" },
-            { href: "/blog", label: "Blog" },
-            { href: "/contact", label: "Contact" },
-            { href: "/doctors", label: "Ai Doctor" },
-            { href: "/my-appointments", label: "My Appointments" },
-         
-          ].map((item, index) => (
+          {menuItems.map((item, index) => (
             <Link 
               key={index}
               href={item.href} 
@@ -108,15 +115,7 @@ export function Header() {
                   <SearchBar />
                 </div>
                 <nav className="flex flex-col gap-4">
-                  {[
-                    { href: "/", label: "Home" },
-                    { href: "/about", label: "About Us" },
-                    { href: "/services", label: "Services" },
-                    { href: "/blog", label: "Blog" },
-                    { href: "/contact", label: "Contact" },
-                    // Tambahkan link Dashboard di menu mobile juga jika pengguna sudah login
-                    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
-                  ].map((item, index) => (
+                  {menuItems.map((item, index) => (
                     <Link 
                       key={index}
                       href={item.href} 
