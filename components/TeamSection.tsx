@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Users, Sparkles, ChevronRight, Github } from 'lucide-react';
+import Link from 'next/link';
 
 export default function ModernTeamSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -9,28 +10,31 @@ export default function ModernTeamSection() {
   // Team members data
   const teamMembers = [
     {
+        name: "MUHAMMAD RIDWAN",
+        role: "Founder & Leader",
+        bio: "I'm a DevOps from SMK Informatika Pesat with a passion for building scalable systems and optimizing infrastructure. I love exploring the latest tools and technologies in cloud computing, automation, and containerization.",
+        image: "/MUHAMMAD RIDWAN (2) (1).webp",
+        color: "from-emerald-500 to-teal-600",
+        github: "https://github.com/MuhammadRidwan01",
+        portofolio: "https://ridwan-porto.my.id/"
+      },
+    {
       name: "REVAN FAHRIANSYAH",
       role: "Co-Founder & CTO",
       bio: "Technical visionary developing innovative solutions and leading our engineering efforts.",
       image: "/REVAN FAHRIANSYAH LAKSONO (2).JPG",
       color: "from-blue-600 to-cyan-500",
-      github: "https://github.com/revanfahriansyah" // Replace with actual GitHub username if available
-    },
-    {
-      name: "MUHAMMAD RIDWAN",
-      role: "Co-Founder & CEO",
-      bio: "Visionary leader guiding our strategic direction and business growth initiatives.",
-      image: "/MUHAMMAD RIDWAN (2) (1).webp",
-      color: "from-emerald-500 to-teal-600",
-      github: "https://github.com/mridwan" // Replace with actual GitHub username if available
+      github: "https://github.com/Alezonythh",
+        portofolio: "https://github.com/Alezonythh"
     },
     {
       name: "PIERRE MAYSAR ALZHEYREY",
       role: "Co-Founder & CTO",
-      bio: "Technology expert driving innovation and overseeing product development.",
+      bio: "Saya seorang pelajar yang antusias mempelajari dunia teknologi, pemrograman, dan pengembangan perangkat lunak. Saya selalu mencari kesempatan untuk belajar hal-hal baru dan mengasah keterampilan saya dalam coding. Saat ini, saya fokus pada pengembangan diri dan eksplorasi berbagai teknologi terkini.",
       image: "/pier.JPG",
-      color: "from-teal-600 to-emerald-600",
-      github: "https://github.com/pierremaysar" // Replace with actual GitHub username if available
+      color: "from--600 to-purple-600",
+      github: "https://github.com/pierrmm",
+        portofolio: "https://pierrm.vercel.app/"
     }
   ];
 
@@ -138,7 +142,7 @@ export default function ModernTeamSection() {
                   src={teamMembers[activeIndex].image}
                   alt={teamMembers[activeIndex].name}
                   fill
-                  className="object-cover object-center opacity-90"
+                  className="object-cover object-top opacity-90"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
@@ -168,15 +172,15 @@ export default function ModernTeamSection() {
                   {teamMembers[activeIndex].name}
                 </h3>
                 
-                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg line-clamp-3">
                   {teamMembers[activeIndex].bio}
                 </p>
                 
                 <div className="flex gap-4">
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-teal-500/25 dark:hover:shadow-teal-600/20 transition-all duration-300">
+                  <Link href={teamMembers[activeIndex].portofolio} target='_blank' className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-teal-500/25 dark:hover:shadow-teal-600/20 transition-all duration-300">
                     <span>Full Profile</span>
                     <ChevronRight size={16} />
-                  </button>
+                  </Link>
                   {teamMembers[activeIndex].github && (
                     <a 
                       href={teamMembers[activeIndex].github}
@@ -215,7 +219,7 @@ export default function ModernTeamSection() {
                   src={member.image}
                   alt={member.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90"
+                  className=" object-center transition-transform duration-700 group-hover:scale-110 opacity-90"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
