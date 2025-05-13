@@ -7,6 +7,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { CTASection } from "@/components/CTASection"
+import TeamSection from "@/components/TeamSection"
 
 export default function AboutPage() {
   // Track whether the component has mounted to avoid hydration issues
@@ -62,6 +63,24 @@ export default function AboutPage() {
       transition: { duration: 0.4 }
     }
   }
+
+  const teamMembers = [
+    {
+      name: "REVAN FAHRIANSYAH",
+      role: "Co-Founder & CTO",
+      image: "/REVAN FAHRIANSYAH LAKSONO (2).JPG"
+    },
+    {
+      name: "MUHAMMAD RIDWAN",
+      role: "Co-Founder & CEO",
+      image: "/MUHAMMAD RIDWAN (2) (1).webp"
+    },
+    {
+      name: "PIERRE MAYSAR ALZHEYREY",
+      role: "Co-Founder & CTO",
+      image: "/pier.JPG",
+    }
+  ]
 
   if (!isMounted) {
     // Return a placeholder with the same structure to avoid layout shift
@@ -328,56 +347,7 @@ export default function AboutPage() {
         </motion.section>
 
         {/* Team Section */}
-        <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900">
-          <div className="container px-4 md:px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tight">Meet Our Team</h2>
-              <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Our diverse team of healthcare professionals, technologists, and wellness experts is united by a common mission: 
-          to make personalized health accessible to everyone.
-              </p>
-            </div>
-            <div className="grid gap-8 md:grid-cols-3">
-              {[
-          {
-            name: "REVAN FAHRIANSYAH",
-            role: "Co-Founder & CTO",
-            image: "https://lh3.googleusercontent.com/ofTAPjI_b6Ap-_JxTjDd7LHDX2lhybVXnhiMe09ltWz5-wGJc7lCsfMjcvEIjgXof_S_hhcKwcmtro4NhcLWFLCO1r5AG17MompmXklnFew3Qs5NdjntIeWBH7hHDsaVDg=w1280"
-          },
-          {
-            name: "MUHAMMAD RIDWAN",
-            role: "Co-Founder & CEO",
-            image: "https://lh3.googleusercontent.com/xS8Lbpl5LCPkA2vrp7Hk6-Iq1-oeCEWR0HDfuw7C-qtHfMJdgOH8jQeAjnvC5R6a0_wW6p-v6Ygwcq96ggahUhrWmVNd24esZaVxoJRkCEd4qVAhe4TbKM63zr8y-rZIEA=w1280"
-          },
-          {
-            name: "PIERRE MAYSAR ALZHEYREY",
-            role: "Co-Founder & CTO",
-            image: "/pier.JPG",
-          }
-              ].map((member, index) => (
-          <div 
-            key={index} 
-            className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow group"
-          >
-            <div className="relative h-64 w-full overflow-hidden">
-              <Image 
-                src={member.image} 
-                alt={member.name} 
-                fill 
-                className="object-contain transition-transform duration-300 group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-            <div className="p-4 text-center">
-              <h3 className="font-bold text-lg">{member.name}</h3>
-              <p className="text-gray-600 dark:text-gray-300">{member.role}</p>
-            </div>
-          </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <TeamSection />
         <CTASection />
       </main>
       <Footer />
