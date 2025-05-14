@@ -158,8 +158,8 @@ export default function ChatPage() {
     } catch (error) {
       setIsTyping(false);
       toast({
-        title: "Gagal mengirim pesan",
-        description: "Silakan coba lagi nanti",
+        title: "Failed to send message",
+        description: "Please try again later",        
         variant: "destructive"
       });
     }
@@ -257,7 +257,7 @@ export default function ChatPage() {
           className="absolute top-0 left-0 z-50 w-64 h-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-4 border-r border-gray-200 dark:border-gray-700 overflow-y-auto md:relative md:block"
         >
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-teal-600 dark:text-teal-400">Konsultasi Lain</h3>
+            <h3 className="text-lg font-semibold text-teal-600 dark:text-teal-400">Other Consultations</h3>
             <Button
               variant="ghost"
               size="icon"
@@ -329,8 +329,8 @@ export default function ChatPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <p className="text-lg font-medium mb-2">Belum ada pesan</p>
-                  <p>Mulai konsultasi dengan mengirim pesan pertama Anda</p>
+                  <p className="text-lg font-medium mb-2">No messages yet</p>
+                  <p>Start your consultation by sending your first message</p>
                 </motion.div>
               ) : (
                 messages.map((msg, idx) => (
@@ -406,15 +406,14 @@ export default function ChatPage() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-teal-600 to-teal-500 dark:from-teal-500 dark:to-teal-400 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
               >
-                Lihat Riwayat Konsultasi
-              </motion.a>
+                View Consultation History              </motion.a>
               <motion.a
                 href="/dashboard"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 border-2 border-teal-500 px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
               >
-                Kembali ke Dashboard
+                Back to Dashboard
               </motion.a>
             </motion.div>
           ) : (
@@ -423,6 +422,25 @@ export default function ChatPage() {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-3 mt-4"
             >
+            {!isCompleted && (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+    className="relative flex items-start gap-4 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-l-4 border-yellow-400 dark:border-yellow-500 p-4 rounded-xl shadow-inner text-sm text-yellow-800 dark:text-yellow-100"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 flex-shrink-0 mt-1 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z" />
+    </svg>
+    <div>
+      <p className="font-medium mb-1">Disclaimer!!</p>
+      <p>
+        This AI response is informative and does not replace direct evaluation from medical professionals. If symptoms persist, immediately visit a healthcare facility.
+      </p>
+    </div>
+  </motion.div>
+)}
+
               <textarea
                 className="flex-1 border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-3 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 outline-none resize-none dark:text-gray-200"
                 placeholder="Ceritakan keluhan Anda..."
@@ -441,13 +459,13 @@ export default function ChatPage() {
                 disabled={isSending || !input.trim()}
               >
                 {isSending ? (
-                  <span className="inline-block animate-pulse">Mengirim...</span>
+                  <span className="inline-block animate-pulse">Sending...</span>
                 ) : (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                     </svg>
-                    Kirim
+                    Send
                   </>
                 )}
               </motion.button>
