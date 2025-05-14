@@ -422,25 +422,6 @@ export default function ChatPage() {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-3 mt-4"
             >
-            {!isCompleted && (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4 }}
-    className="relative flex items-start gap-4 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-l-4 border-yellow-400 dark:border-yellow-500 p-4 rounded-xl shadow-inner text-sm text-yellow-800 dark:text-yellow-100"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 flex-shrink-0 mt-1 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z" />
-    </svg>
-    <div>
-      <p className="font-medium mb-1">Disclaimer!!</p>
-      <p>
-        This AI response is informative and does not replace direct evaluation from medical professionals. If symptoms persist, immediately visit a healthcare facility.
-      </p>
-    </div>
-  </motion.div>
-)}
-
               <textarea
                 className="flex-1 border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-3 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 outline-none resize-none dark:text-gray-200"
                 placeholder="Ceritakan keluhan Anda..."
