@@ -99,6 +99,12 @@ export default function ChatPage() {
         },
       });
 
+      if (res.status === 403) {
+        // Handle unauthorized access to consultation
+        router.push("/404");
+        return;
+      }
+
       if (!res.ok) {
         throw new Error("Failed to fetch consultation");
       }
@@ -112,6 +118,7 @@ export default function ChatPage() {
       router.push("/my-appointments");
     }
   };
+
 
   const sendMessage = async () => {
     if (!input.trim() || isSending) return;
