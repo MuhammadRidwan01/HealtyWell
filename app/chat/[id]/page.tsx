@@ -420,10 +420,6 @@ export default function ChatPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg shadow-md border border-yellow-200 dark:border-yellow-700"
             >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: formatMessage(consultation.notes)
-                }}
               />
             </motion.div>
           )}
