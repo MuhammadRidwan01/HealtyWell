@@ -443,7 +443,7 @@ export default function ChatPage() {
 
               <textarea
                 className="flex-1 border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-3 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 outline-none resize-none dark:text-gray-200"
-                placeholder="Ceritakan keluhan Anda..."
+                placeholder="Tell us about your complaints..."                
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
