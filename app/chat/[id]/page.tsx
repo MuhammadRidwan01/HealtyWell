@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import Image from "next/image";
 
 export default function ChatPage() {
   const { id } = useParams();
@@ -293,225 +292,167 @@ export default function ChatPage() {
         </motion.div>
         {/* Main Chat Area */}
         <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex-1 p-3 md:p-4 space-y-4 flex flex-col min-h-[calc(100vh-100px)]"
-    >
-      {/* Gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-teal-500/10 dark:from-teal-500/20 to-transparent blur-3xl -z-10" />
-
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2"
-      >
-        <h2 className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-teal-600 to-teal-400 dark:from-teal-400 dark:to-teal-300 text-transparent bg-clip-text">
-          Konsultasi dengan {consultation?.doctor?.name || "Dokter"}
-        </h2>
-        {consultation?.doctor?.specialization && (
-          <span className="text-sm bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full whitespace-nowrap">
-            {consultation.doctor.specialization}
-          </span>
-        )}
-      </motion.div>
-
-      {/* Message container */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-4 md:p-6 rounded-xl shadow-lg flex-1 overflow-hidden flex flex-col"
-      >
-        <div 
-          // ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto pb-2 space-y-3 scrollbar-thin scrollbar-thumb-teal-500 scrollbar-track-transparent"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 p-4 space-y-4 flex flex-col"
         >
-          <AnimatePresence>
-            {messages.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400 py-10"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 md:h-16 md:w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <p className="text-lg font-medium mb-2">No messages yet</p>
-                <p>Start your consultation by sending your first message</p>
-              </motion.div>
-            ) : (
-              messages.map((msg, idx) => (
-                <motion.div 
-                  key={idx} 
-                  className={`flex items-start gap-3 mb-4 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          <div className="fixed inset-0 bg-gradient-to-b from-teal-500/10 dark:from-teal-500/20 to-transparent blur-3xl -z-10" />
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2"
+          >
+            <h2 className="text-2xl font-semibold bg-gradient-to-r from-teal-600 to-teal-400 dark:from-teal-400 dark:to-teal-300 text-transparent bg-clip-text">
+              Konsultasi dengan {consultation?.doctor?.name}
+            </h2>
+            {consultation?.doctor?.specialization && (
+              <span className="text-sm bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full">
+                {consultation.doctor.specialization}
+              </span>
+            )}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-xl shadow-lg space-y-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-teal-500 scrollbar-track-transparent"
+            id="messagesContainer"
+          >
+            <AnimatePresence>
+              {messages.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <p className="text-lg font-medium mb-2">No messages yet</p>
+                  <p>Start your consultation by sending your first message</p>
+                </motion.div>
+              ) : (
+                messages.map((msg, idx) => (
+                  <div key={idx} className="flex items-start gap-3 mb-4">
+                    {msg.role !== "user" && (
+                      <img
+                        src={consultation?.doctor?.photoUrl || "/doctor-avatar.png"}
+                        alt={`${consultation?.doctor?.name}'s photo`}
+                        className="w-10 h-10 rounded-full object-cover shadow-md"
+                      />
+                    )}
+
+                    <motion.div
+                      initial={{ opacity: 0, x: msg.role === "user" ? 20 : -20, scale: 0.95 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ type: "spring", duration: 0.5 }}
+                      className={`p-4 rounded-xl shadow-md flex-1 ${msg.role === "user"
+                          ? "bg-gradient-to-r from-teal-500 to-teal-600 dark:from-teal-600 dark:to-transparent text-white ml-auto max-w-[80%]"
+                          : "bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-200 mr-auto max-w-[80%]"
+                        }`}
+                    >
+                      <div
+                        className="text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: formatMessage(msg.message).replace(
+                            /\*\*(.*?)\*\*/g,
+                            '<strong class="font-semibold">$1</strong>'
+                          )
+                        }}
+                      />
+                    </motion.div>
+                  </div>
+                )))}
+
+              {isTyping && (
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
+                  className="bg-white/90 dark:bg-gray-800/90 p-4 rounded-xl shadow-md mr-auto max-w-[80%] flex items-center space-x-2"
                 >
-                  {msg.role !== "user" && (
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0 shadow-md">
-                      <Image
-                        src={consultation?.doctor?.photoUrl || "/doctor-avatar.png"}
-                        alt={`${consultation?.doctor?.name || "Doctor"}'s photo`}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <motion.div
-                    className={`p-3 md:p-4 rounded-xl shadow-md ${
-                      msg.role === "user"
-                        ? "bg-gradient-to-r from-teal-500 to-teal-600 dark:from-teal-600 dark:to-teal-500 text-white max-w-[80%]"
-                        : "bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-200 max-w-[80%]"
-                    }`}
-                  >
-                    <div
-                      className="text-sm leading-relaxed"
-                      dangerouslySetInnerHTML={{
-                        __html: formatMessage(msg.message).replace(
-                          /\*\*(.*?)\*\*/g,
-                          '<strong class="font-semibold">$1</strong>'
-                        )
-                      }}
-                    />
-                  </motion.div>
-
-                  {msg.role === "user" && (
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-teal-100 dark:bg-teal-800 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600 dark:text-teal-300" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
+                  <div className="w-2.5 h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                  <div className="w-2.5 h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                  <div className="w-2.5 h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
                 </motion.div>
-              ))
-            )}
+              )}
+            </AnimatePresence>
 
-            {isTyping && (
+            {isCompleted && consultation?.notes && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-start gap-3 mb-4"
+                className="mt-4 bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg shadow-md border border-yellow-200 dark:border-yellow-700"
               >
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden flex-shrink-0 shadow-md">
-                  <Image
-                    src={consultation?.doctor?.photoUrl || "/doctor-avatar.png"}
-                    alt="Doctor typing"
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3 md:p-4 rounded-xl shadow-md flex items-center space-x-2">
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 dark:bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
-                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: formatMessage(consultation.notes)
+                  }}
+                />
               </motion.div>
             )}
-          </AnimatePresence>
+          </motion.div>
 
-          {isCompleted && consultation?.notes && (
+          {isCompleted ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg shadow-md border border-yellow-200 dark:border-yellow-700"
+              className="flex flex-col sm:flex-row gap-3 justify-center mt-4"
             >
+              <motion.a
+                href="/my-appointments"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-teal-600 to-teal-500 dark:from-teal-500 dark:to-teal-400 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
+              >
+                View Consultation History              </motion.a>
+              <motion.a
+                href="/dashboard"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 border-2 border-teal-500 px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
+              >
+                Back to Dashboard
+              </motion.a>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-3 mt-4"
+            >
+              <textarea
+                className="flex-1 border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-3 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 outline-none resize-none dark:text-gray-200"
+                placeholder="Ceritakan keluhan Anda..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyPress}
+                disabled={isSending}
+                rows={2}
+                autoFocus
               />
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={sendMessage}
+                className={`bg-gradient-to-r from-teal-600 to-teal-500 dark:from-teal-500 dark:to-teal-400 text-white px-5 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center min-w-[100px]`}
+                disabled={isSending || !input.trim()}
+              >
+                {isSending ? (
+                  <span className="inline-block animate-pulse">Sending...</span>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                    Send
+                  </>
+                )}
+              </motion.button>
             </motion.div>
           )}
-        </div>
-      </motion.div>
-
-      {/* Footer - Navigation or Input */}
-      {isCompleted ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row gap-3 justify-center mt-4"
-        >
-          <Link href="/my-appointments" passHref>
-            <motion.a
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="bg-gradient-to-r from-teal-600 to-teal-500 dark:from-teal-500 dark:to-teal-400 text-white px-4 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
-            >
-              View Consultation History
-            </motion.a>
-          </Link>
-          <Link href="/dashboard" passHref>
-            <motion.a
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 border-2 border-teal-500 px-4 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 text-center"
-            >
-              Back to Dashboard
-            </motion.a>
-          </Link>
         </motion.div>
-      ) : (
-        <>
-          {/* Disclaimer */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="relative flex items-start gap-3 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-l-4 border-yellow-400 dark:border-yellow-500 p-3 rounded-lg shadow-inner text-sm text-yellow-800 dark:text-yellow-100 mb-3"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 flex-shrink-0 mt-0.5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z" />
-            </svg>
-            <div>
-              <p className="font-medium mb-0.5">Disclaimer!!</p>
-              <p className="text-xs md:text-sm">
-                This AI response is informative and does not replace direct evaluation from medical professionals. If symptoms persist, immediately visit a healthcare facility.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Input area */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row items-center gap-2 mt-1"
-          >
-            <textarea
-              className="w-full border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-3 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 outline-none resize-none dark:text-gray-200 min-h-[60px]"
-              placeholder="Tell us about your complaints..."                
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyPress}
-              disabled={isSending}
-              rows={2}
-              autoFocus
-            />
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={sendMessage}
-              className={`w-full sm:w-auto bg-gradient-to-r from-teal-600 to-teal-500 dark:from-teal-500 dark:to-teal-400 text-white px-5 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center min-w-[100px] ${
-                !input.trim() || isSending ? "opacity-70 cursor-not-allowed" : ""
-              }`}
-              disabled={isSending || !input.trim()}
-            >
-              {isSending ? (
-                <span className="inline-block animate-pulse">Sending...</span>
-              ) : (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                  </svg>
-                  Send
-                </>
-              )}
-            </motion.button>
-          </motion.div>
-        </>
-      )}
-    </motion.div>
       </div>
       <Footer />
     </>);
