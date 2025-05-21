@@ -259,8 +259,8 @@ export default function ContactPage() {
                         <div>
                           <h3 className="font-medium mb-1">Our Location</h3>
                           <p className="text-sm text-gray-600 dark:text-gray-300">
-                            123 Wellness Avenue<br />
-                            Jakarta, Indonesia 12345
+                            Jalan Poras 7 16610<br />
+                            Kebonkelapa Jawa Barat, Indonesia 12345
                           </p>
                         </div>
                       </CardContent>

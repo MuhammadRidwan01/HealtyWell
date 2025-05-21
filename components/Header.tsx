@@ -11,11 +11,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-import { useAuth } from "@/hooks/use-auth" // Tambahkan import ini
+import { useAuth } from "@/hooks/use-auth"
+import { usePathname } from 'next/navigation'
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
-  const { isAuthenticated } = useAuth() // Gunakan hook useAuth untuk memeriksa status autentikasi
+  const { isAuthenticated } = useAuth()
+  const pathname = usePathname()
   
   useEffect(() => {
     const handleScroll = () => {
@@ -26,19 +28,16 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Definisikan menu items dengan kondisi
   const menuItems = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About Us" },
     { href: "/servics", label: "Services" },
     { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact" },
-    // Tampilkan menu Ai Doctor dan My Appointments hanya jika sudah login
     ...(isAuthenticated ? [
       { href: "/doctors", label: "Ai Doctor" },
       { href: "/my-appointments", label: "My Appointments" },
     ] : []),
-    // Tambahkan link Dashboard jika pengguna sudah login
     ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard" }] : [])
   ];
 
@@ -73,10 +72,20 @@ export function Header() {
             <Link 
               key={index}
               href={item.href} 
-              className="relative text-sm font-medium text-muted-foreground transition-colors hover:text-primary group"
+              className={cn(
+                "relative text-sm font-medium transition-colors group",
+                pathname === item.href 
+                  ? "text-teal-600" 
+                  : "text-muted-foreground hover:text-primary"
+              )}
             >
               {item.label}
-              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-teal-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              <span className={cn(
+                "absolute inset-x-0 -bottom-1 h-0.5 bg-teal-500 transition-all duration-300",
+                pathname === item.href 
+                  ? "scale-x-100" 
+                  : "scale-x-0 group-hover:scale-x-100"
+              )}></span>
             </Link>
           ))}
         </nav>
@@ -119,8 +128,19 @@ export function Header() {
                     <Link 
                       key={index}
                       href={item.href} 
-                      className="text-lg font-medium text-foreground transition-colors hover:text-teal-500 flex items-center"
+                      className={cn(
+                        "text-lg font-medium transition-colors relative group pl-4",
+                        pathname === item.href 
+                          ? "text-teal-600" 
+                          : "text-foreground hover:text-teal-500"
+                      )}
                     >
+                      <span className={cn(
+                        "absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-teal-500 transition-all duration-300",
+                        pathname === item.href 
+                          ? "opacity-100 scale-100" 
+                          : "opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75"
+                      )}></span>
                       {item.label}
                     </Link>
                   ))}

@@ -168,7 +168,7 @@ export default function AboutPage() {
                     many people still struggle to manage their health effectively in their daily lives.
                   </p>
                   <p>
-                    Founded in 2023 by a team of healthcare professionals and technology experts, we set out to bridge 
+                    Founded in 2025 by a team of healthcare professionals and technology experts, we set out to bridge 
                     the gap between clinical healthcare and everyday wellness. We believe that true health comes from 
                     consistent, informed choices that people make every day.
                   </p>
@@ -240,7 +240,7 @@ export default function AboutPage() {
         </motion.section>
 
         {/* Our Approach Section */}
-        <motion.section 
+        {/* <motion.section 
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
@@ -344,7 +344,7 @@ export default function AboutPage() {
               ))}
             </motion.div>
           </div>
-        </motion.section>
+        </motion.section> */}
 
         {/* Team Section */}
         <TeamSection />
