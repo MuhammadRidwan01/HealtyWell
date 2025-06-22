@@ -347,8 +347,10 @@ export default function AboutPage() {
         </motion.section> */}
 
         {/* Team Section */}
+        <section id="team">
         <TeamSection />
         <CTASection />
+        </section>
       </main>
       <Footer />
       <LiveChat />
