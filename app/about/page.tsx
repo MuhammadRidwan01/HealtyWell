@@ -5,17 +5,26 @@ import { Footer } from "@/components/Footer"
 import { LiveChat } from "@/components/live-chat"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { CTASection } from "@/components/CTASection"
 import TeamSection from "@/components/TeamSection"
 
 export default function AboutPage() {
   // Track whether the component has mounted to avoid hydration issues
   const [isMounted, setIsMounted] = useState(false)
+  const teamSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      if (window.location.hash === '#team' && teamSectionRef.current) {
+        teamSectionRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [isMounted])
 
   // Animation variants
   const fadeIn = {
@@ -347,7 +356,7 @@ export default function AboutPage() {
         </motion.section> */}
 
         {/* Team Section */}
-        <section id="team">
+        <section id="team" ref={teamSectionRef}>
         <TeamSection />
         <CTASection />
         </section>
